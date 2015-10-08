@@ -7,7 +7,7 @@ package virtualpondgui;
  * 
  * @author atleebrink
  */
-public class MenuBarReactor implements GUIMenuBar.Reactor {
+public class MenuBarReactor implements MenuBar.Reactor {
 	private GUICore guiCore;
 	
 	public MenuBarReactor(GUICore guiCore) {
