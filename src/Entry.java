@@ -13,7 +13,7 @@ public class Entry {
 	 *  If set to <code>-1</code>, indicates Entry is not associated with an EntryList.
 	 */
 	private int    id = -1;
-	/** Core storage of field:data pairs.
+	/** Core storage of {@link Field#id}:data pairs.
 	 */
 	private HashMap<Integer, String> data;
 
