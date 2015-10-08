@@ -4,51 +4,27 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-public class VirtualPond implements Runnable {
+import addressbook.*;
+
+public class VirtualPond implements Runnable, GUICore {
 	final static String TITLE = "Virtual Pond";
 	final static int WINDOW_WIDTH = 800;
 	final static int WINDOW_HEIGHT = 600;
 	
-	public JMenuBar createMenuBar() {
-		// TODO: pare down to just those features that we want for our
-		//	initial iteration.
-		
-		// contains File, Help
-		JMenuBar menuBar = new JMenuBar();
-
-		// File menu
-		JMenu file = new JMenu("File");
-		JMenuItem fileNew = new JMenuItem("New");
-		JMenuItem fileOpen = new JMenuItem("Open...");
-		JMenuItem fileClose = new JMenuItem("Close");
-		JMenuItem fileSave = new JMenuItem("Save");
-		JMenuItem fileSaveAs = new JMenuItem("Save As...");
-		JMenuItem fileQuit = new JMenuItem("Quit");
-		file.add(fileNew);
-		file.add(fileOpen);
-		file.add(fileClose);
-		file.addSeparator();
-		file.add(fileSave);
-		file.add(fileSaveAs);
-		file.addSeparator();
-		file.add(fileQuit);
-
-		// Help menu
-		JMenu help = new JMenu("Help");
-		JMenuItem helpUserManual = new JMenuItem("User Manual");
-		JMenuItem helpAbout = new JMenuItem("About");
-		help.add(helpUserManual);
-		help.add(helpAbout);
-
-		// add menus to menuBar
-		menuBar.add(file);
-		menuBar.add(help);
-
-		menuBar.setVisible(true);
-
-		return menuBar;
+	/* GUICore methods:
+	 * These methods are exposed to Reactors,
+	 * which are classes that process user input from the GUI.
+	 */
+	@Override
+	public void quit() {
+		// TODO: IF unsaved changes THEN ask user to save OR cancel OR discard changes.
+		System.exit(0);
 	}
 	
+	/* Private methods:
+	 * These methods do secret things,
+	 * that other classes don't need to know about.
+	 */
 	/**
 	 * Creates and returns a new JComponent populated with some buttons.
 	 * @param glue the callback interface.
@@ -59,13 +35,10 @@ public class VirtualPond implements Runnable {
 		
 		JButton add = new JButton("Add");
 		JButton edit = new JButton("Edit");
-		JButton find = new JButton("Find");
 		JButton delete = new JButton("Delete");
 		
 		buttonBar.add(add);
 		buttonBar.add(edit);
-		buttonBar.add(Box.createHorizontalStrut(20));
-		buttonBar.add(find);
 		buttonBar.add(Box.createHorizontalStrut(20));
 		buttonBar.add(delete);
 				
@@ -101,7 +74,7 @@ public class VirtualPond implements Runnable {
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		frame.setJMenuBar(createMenuBar());
+		frame.setJMenuBar(GUIMenuBar.create(new MenuBarReactor(this)));
 		
 		frame.setContentPane(createMainContentPane());
 
@@ -113,7 +86,7 @@ public class VirtualPond implements Runnable {
 	/**
 	 * Begins execution of the graphical user interface.
 	 * This includes the program window and application menu.
-	 * <p>
+	 *
 	 * This method should be called after all other non-GUI
 	 * initialization has completed.
 	 *
