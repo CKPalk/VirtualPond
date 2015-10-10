@@ -1,5 +1,6 @@
 package addressbook;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,11 +10,15 @@ public class VirtualAddressBook {
 	
 	
 	// Final static members
-	public static final String DEFAULT_DATA_FILENAME = "address_book_default_data"; // will be *.pond™
+	public static final String DEFAULT_DATA_FILENAME = "address_book_default_data"; // will be *.pondï¿½
 	
 	// --- Constructor ---
 	public VirtualAddressBook() {
 		this(getDefaultBook());
+	}
+	
+	VirtualAddressBook(File addressBookFile) {
+		this(new VirtualBookReader(addressBookFile).read());
 	}
 	
 	public VirtualAddressBook(ArrayList<Field> fields, ArrayList<Contact> contactsSet) {
