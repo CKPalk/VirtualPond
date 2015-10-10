@@ -6,10 +6,18 @@ import java.net.URI;
 
 import javax.swing.JFileChooser;
 
+import addressbook.Contact;
 import addressbook.VirtualAddressBook;
 
 public interface GUICore {
 	// TODO: expose public methods of GUICore
+	
+	/**
+	 * Pops up a modal Edit Contact dialog box.
+	 * @param contact the initial Contact to edit.
+	 * @return false if Cancelled, else true.
+	 */
+	boolean editContact(String title, Contact contact);
 	
 	VirtualAddressBook getCurrentAddressBook();
 	
@@ -17,6 +25,14 @@ public interface GUICore {
 	
 	Component getMainWindow();
 	
+	/**
+	 * Returns a reference to the currently selected Contact,
+	 * if any. If fewer or more than 1 contact is selected,
+	 * returns null.
+	 * @return the selected contact else null.
+	 */
+	Contact getSelectedContact();
+
 	/**
 	 * @return a URI to an HTML User Manual, or null.
 	 */

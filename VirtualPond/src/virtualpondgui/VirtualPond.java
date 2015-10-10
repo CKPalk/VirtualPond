@@ -30,6 +30,13 @@ public class VirtualPond implements Runnable, GUICore {
 	 */
 	
 	@Override
+	public boolean editContact(String title, Contact contact) {
+		EditContactDialog ecDialog = new EditContactDialog(mainFrame, title, addressBook, contact);
+		// TODO: show dialog, decide which button was pressed at the end.
+		return true;
+	}
+	
+	@Override
 	public VirtualAddressBook getCurrentAddressBook() {
 		return addressBook;
 	}
@@ -45,6 +52,13 @@ public class VirtualPond implements Runnable, GUICore {
 	@Override
 	public Component getMainWindow() {
 		return mainFrame;
+	}
+	
+	@Override
+	public Contact getSelectedContact() {
+		// TODO: determine if a row is selected in the table, if so, return it as a contact
+		// else return null
+		return null;
 	}
 
 	@Override
@@ -82,7 +96,9 @@ public class VirtualPond implements Runnable, GUICore {
 		// for now, assume that it was
 		isAddressBookFresh = true;
 		updateWindowTitle();
-		mainContentPanel.resetContactsTable(this);
+		mainContentPanel.resetContactsTable();
+		mainContentPanel.resetEditArea();
+		mainFrame.pack();
 	}
 	
 	@Override

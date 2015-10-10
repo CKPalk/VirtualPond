@@ -11,11 +11,14 @@ public class ContactsTable extends JScrollPane {
 
 	}
 	
+	private GUICore guiCore;
+	
 	public ContactsTable(GUICore guiCore) {
-		resetTable(guiCore);
+		this.guiCore = guiCore;
+		resetTable();
 	}
 	
-	public void resetTable(GUICore guiCore) {
+	public void resetTable() {
 		if( guiCore.getCurrentAddressBook() != null ) {
 			ContactsTableReactor contactsTableReactor = new ContactsTableReactor(guiCore);
 			setViewportView(new JTable(contactsTableReactor));
