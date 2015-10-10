@@ -67,7 +67,7 @@ public class VirtualBookReader implements VirtualBookIO {
 			// Reached end of file
 			file_in.close();
 		} catch (IOException e1) {
-			// TODO catch block for not finding the default fields file.
+			// TODO throw custom error for file reading gone wrong
 			e1.printStackTrace();
 		}
 		
@@ -78,7 +78,7 @@ public class VirtualBookReader implements VirtualBookIO {
 	}
 	
 	private String processedFilename(String filename, boolean hidden) {
-		// Removes any extensions on filename and appends .pond™
+		// Removes any extensions on filename and appends .pondï¿½
 		if (filename.contains(".")) {
 			filename = filename.split(".")[0] + "." + VIRTUAL_ADDRESS_BOOK_EXTENSION;
 			return (hidden) ? ".".concat(filename) : filename;
