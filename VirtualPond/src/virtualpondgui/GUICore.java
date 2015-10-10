@@ -4,8 +4,12 @@ import java.awt.Component;
 import java.io.File;
 import java.net.URI;
 
+import javax.swing.JFileChooser;
+
 public interface GUICore {
 	// TODO: expose public methods of GUICore
+	
+	JFileChooser getFileChooser();
 	
 	Component getMainWindow();
 	
@@ -13,8 +17,7 @@ public interface GUICore {
 	 * @return a URI to an HTML User Manual, or null.
 	 */
 	URI getUserManualURI();
-	
-	
+		
 	/**
 	 * Attempts to open a file and make it the current address book for the current window.
 	 * @param file an extant file to open

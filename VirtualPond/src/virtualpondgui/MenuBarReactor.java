@@ -36,7 +36,7 @@ public class MenuBarReactor implements MenuBar.Reactor {
 		onFileClose();
 		
 		// will probably want to move this so it can be shared with the Save and SaveAs codes
-		final JFileChooser fileChooser = new JFileChooser();
+		JFileChooser fileChooser = guiCore.getFileChooser();
 		
 		// WARNING: this line blocks until the user makes a choice
 		int retCode = fileChooser.showOpenDialog(guiCore.getMainWindow());
