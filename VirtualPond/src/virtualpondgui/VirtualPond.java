@@ -62,6 +62,7 @@ public class VirtualPond implements Runnable, GUICore {
 	
 	@Override
 	public void openFile(File file) {
+		// TODO: make this method cleaner: I feel that there are going to be bugs popping up around here.
 		if( addressBook != null) { // there is already an open address book
 			if( !commitAddressBookToFile() ) { // we weren't able to save the current address book
 				System.out.println("error: openFile(...) tried to commitAddressBookToFile() and failed!");

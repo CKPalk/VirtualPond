@@ -2,9 +2,6 @@ package virtualpondgui;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 public class ContactsTable extends JScrollPane {
