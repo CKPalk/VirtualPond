@@ -6,8 +6,12 @@ import java.net.URI;
 
 import javax.swing.JFileChooser;
 
+import addressbook.VirtualAddressBook;
+
 public interface GUICore {
 	// TODO: expose public methods of GUICore
+	
+	VirtualAddressBook getCurrentAddressBook();
 	
 	JFileChooser getFileChooser();
 	

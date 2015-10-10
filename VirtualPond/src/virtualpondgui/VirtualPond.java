@@ -16,17 +16,23 @@ public class VirtualPond implements Runnable, GUICore {
 	private static URI URI_USER_MANUAL = null;
 	
 	private JFrame mainFrame = null;
+	private MainContentPanel mainContentPanel = null;
 	private JFileChooser fileChooser = null;
 
 	// current address book information
 	private String addressBookFileName = null;
 	private VirtualAddressBook addressBook = null;
 	private boolean isAddressBookFresh = true;
-	
+
 	/* GUICore methods:
 	 * These methods are exposed to Reactors,
 	 * which are classes that process user input from the GUI.
 	 */
+	
+	@Override
+	public VirtualAddressBook getCurrentAddressBook() {
+		return addressBook;
+	}
 	
 	@Override
 	public JFileChooser getFileChooser() {
@@ -61,21 +67,21 @@ public class VirtualPond implements Runnable, GUICore {
 				System.out.println("error: openFile(...) tried to commitAddressBookToFile() and failed!");
 				return; // DON'T open a new file
 			}
-		} else {
-			if( file == null ) {
-				file = new File("./.address_book_default_data.pond™");
-				addressBookFileName = null;
-			} else {
-				addressBookFileName = file.getName();
-			}
-			System.out.println("attempting to open file" + file.getAbsolutePath());
-			VirtualBookReader vbReader = new VirtualBookReader(file);
-			addressBook = vbReader.read();
-			// TODO: check that the addressBook was correctly opened
-			// for now, assume that it was
-			isAddressBookFresh = false;
-			updateWindowTitle();
 		}
+		if( file == null ) {
+			file = new File("./.address_book_default_data.pond™");
+			addressBookFileName = null;
+		} else {
+			addressBookFileName = file.getName();
+		}
+		System.out.println("attempting to open file" + file.getAbsolutePath());
+		VirtualBookReader vbReader = new VirtualBookReader(file);
+		addressBook = vbReader.read();
+		// TODO: check that the addressBook was correctly opened
+		// for now, assume that it was
+		isAddressBookFresh = true;
+		updateWindowTitle();
+		mainContentPanel.resetContactsTable(this);
 	}
 	
 	@Override
@@ -140,18 +146,19 @@ public class VirtualPond implements Runnable, GUICore {
 	 */
 	public void run() {
 		mainFrame = new JFrame(TITLE);
-
+		
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		mainFrame.setJMenuBar(new MenuBar(this));
-		
-		mainFrame.setContentPane(new MainContentPanel(this));
+
+		mainContentPanel = new MainContentPanel(this);
+		mainFrame.setContentPane(mainContentPanel);
 
 		mainFrame.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 		mainFrame.pack();
 		mainFrame.setVisible(true);
 		
-		/* open default empty file */
+
 		openFile(null);
 	}
 

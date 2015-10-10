@@ -2,24 +2,26 @@ package virtualpondgui;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 public class ContactsTable extends JScrollPane {
 	private static final long serialVersionUID = 1L;
 
-	public interface Reactor {
-		
+	public interface Reactor extends TableModel {
+
 	}
 	
-	public ContactsTable(Reactor reactor) {
-		// the default fields will come from the AddressBook,
-		// but for mock-up purposes I will assume the following fields:
-		// First, Last, Address, City, State, ZIP, Phone, Email
-		String columnNames[] = {"First", "Last", "Address", "City", "State",
-			"ZIP", "Phone", "Email"};
-		JTable table = new JTable(new DefaultTableModel(null, columnNames));
-
-		setViewportView(table);
+	public ContactsTable(GUICore guiCore) {
+		resetTable(guiCore);
 	}
-
+	
+	public void resetTable(GUICore guiCore) {
+		if( guiCore.getCurrentAddressBook() != null ) {
+			ContactsTableReactor contactsTableReactor = new ContactsTableReactor(guiCore);
+			setViewportView(new JTable(contactsTableReactor));
+		}		
+	}
 }
