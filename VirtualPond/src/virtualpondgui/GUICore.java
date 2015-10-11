@@ -55,12 +55,7 @@ public interface GUICore {
 	 * @return a URI to an HTML User Manual, or null.
 	 */
 	URI getUserManualURI();
-	
-	/**
-	 * @return true if some version of Mac computer, else false.
-	 */
-	boolean isMac();
-		
+			
 	/**
 	 * Attempts to open a file and make it the current address book for the current window.
 	 * @param file an extant file to open

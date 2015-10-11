@@ -17,7 +17,6 @@ public class VirtualPond implements Runnable, GUICore {
 	final static String USER_MANUAL = "https://www.assembla.com/spaces/cis422f15-team1/wiki/Software_Documentation";
 	private static URI URI_USER_MANUAL = null;
 	
-	private boolean isMac;
 	private JFrame mainFrame = null;
 	private MainContentPanel mainContentPanel = null;
 	private JFileChooser fileChooser = null;
@@ -26,11 +25,6 @@ public class VirtualPond implements Runnable, GUICore {
 	private String addressBookFileName = null;
 	private VirtualAddressBook addressBook = null;
 	private boolean isAddressBookFresh = true;
-
-	// Constructor //
-	public VirtualPond(boolean isMac) {
-		this.isMac = isMac;
-	}
 	
 	// GUICore METHODS //
 	
@@ -108,11 +102,6 @@ public class VirtualPond implements Runnable, GUICore {
 			}
 		}
 		return URI_USER_MANUAL;
-	}
-	
-	@Override
-	public boolean isMac() {
-		return isMac;
 	}
 	
 	@Override
@@ -233,7 +222,6 @@ public class VirtualPond implements Runnable, GUICore {
 		mainFrame.setLocationRelativeTo(null);
 		
 		mainFrame.setVisible(true);
-		
 
 		openFile(null);
 	}
@@ -243,15 +231,13 @@ public class VirtualPond implements Runnable, GUICore {
 	 */
 	public static void createAndShowGUI(/* what args? */) {
 		// detect operating system
-		boolean isMac = false;
 		String OS = System.getProperty("os.name").toLowerCase();
 		if (OS.contains("mac")) { // do Mac stuff
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
-			isMac = true;
 		}
 
 		// ask Swing to use the Runnable of this class in a new thread
-		SwingUtilities.invokeLater(new VirtualPond(isMac));
+		SwingUtilities.invokeLater(new VirtualPond());
 	}
 	
 	/**

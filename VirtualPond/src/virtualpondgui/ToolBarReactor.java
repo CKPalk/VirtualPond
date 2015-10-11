@@ -36,7 +36,6 @@ public class ToolBarReactor implements ToolBar.Reactor {
 		int[] selected = guiCore.getSelectedIndices();
 		if( selected.length > 0 ) {
 			String plural = selected.length == 1 ? "contact" : (selected.length + " contacts");
-			// TODO: Windows: "Yes, No", Mac: "No, Yes"
 			Object[] options = {"Yes", "No"};
 			int n = JOptionPane.showOptionDialog(guiCore.getMainWindow(),
 					"Are you sure you want to delete the selected " + plural +" from this address book?",
