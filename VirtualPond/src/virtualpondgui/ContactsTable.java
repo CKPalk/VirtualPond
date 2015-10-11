@@ -48,4 +48,9 @@ public class ContactsTable extends JScrollPane {
 			setViewportView(table);
 		}		
 	}
+	
+	public void updateContact(int index) {
+		if( table == null || index < 0 ) return;
+		tableModel.fireTableRowsUpdated(index, index);;
+	}
 }

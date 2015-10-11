@@ -52,7 +52,13 @@ public class MainContentPanel extends JPanel {
 		contactsTable.resetTable();
 	}
 	
+	// deprecated
 	public void resetEditArea() {
 		//editArea.populate();
 	}
+	
+	public void updateContactAtIndex(int index) {
+		contactsTable.updateContact(index);
+	}
+	
 }

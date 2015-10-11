@@ -55,13 +55,14 @@ public class VirtualPond implements Runnable, GUICore {
 		ArrayList<Contact> contacts = addressBook.getContacts();
 		for( int i = indices.length - 1; i >= 0; i-- ) contacts.remove(indices[i]);
 		mainContentPanel.deleteContacts(indices, true);
+		makeStale();
 	}
 	
 	/**
 	 * @return true if user selected Save, else false
 	 */
 	@Override
-	public Contact editContact(String title, Contact initialContact) {
+	public Contact editContactDialog(String title, Contact initialContact) {
 		EditContactDialog ecDialog = new EditContactDialog(mainFrame, title, addressBook, initialContact);
 		return ecDialog.getResult();
 	}
@@ -139,6 +140,14 @@ public class VirtualPond implements Runnable, GUICore {
 		mainContentPanel.resetContactsTable();
 		mainContentPanel.resetEditArea();
 		mainFrame.pack();
+	}
+	
+	@Override
+	public void updateContactAtIndex(int index, Contact contact) {
+		if( index < 0 || contact == null ) return;
+		addressBook.getContacts().set(index, contact);
+		mainContentPanel.updateContactAtIndex(index);
+		makeStale();
 	}
 	
 	@Override

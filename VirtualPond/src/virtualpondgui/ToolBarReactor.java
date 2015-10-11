@@ -12,7 +12,7 @@ public class ToolBarReactor implements ToolBar.Reactor {
 	}
 	
 	public void onAdd() {
-		guiCore.addContact( guiCore.editContact("Add New Contact", null) );
+		guiCore.addContact( guiCore.editContactDialog("Add New Contact", null) );
 	}
 	
 	public void onEdit() {
@@ -25,8 +25,10 @@ public class ToolBarReactor implements ToolBar.Reactor {
 		if( currentContact == null ) {
 			System.err.println("error: nothing selected");
 		} else {
-			guiCore.editContact("Edit Contact", currentContact);
-			// todo: refresh contact in view
+			currentContact = guiCore.editContactDialog("Edit Contact", currentContact);
+			if( currentContact != null ) {
+				guiCore.updateContactAtIndex(indices[0], currentContact);
+			}
 		}
 	}
 	

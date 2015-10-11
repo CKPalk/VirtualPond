@@ -30,7 +30,7 @@ public interface GUICore {
 	 * @param contact the initial Contact to edit, which may be null.
 	 * @return the modified Contact, or null if the user cancelled.
 	 */
-	Contact editContact(String title, Contact contact);
+	Contact editContactDialog(String title, Contact contact);
 	
 	/**
 	 * Returns an array of selected contact indices.
@@ -66,6 +66,13 @@ public interface GUICore {
 	 * @param file an extant file to open
 	 */
 	void openFile(File file);
+	
+	/**
+	 * Overwrites a contact at an existing index with new values.
+	 * @param index the index of the modification.
+	 * @param contact the new values to put there.
+	 */
+	void updateContactAtIndex(int index, Contact contact);
 	
 	/**
 	 * Tells the main program that the user wants to quit.
