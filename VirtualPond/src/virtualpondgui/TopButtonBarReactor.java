@@ -17,7 +17,7 @@ public class TopButtonBarReactor implements TopButtonBar.Reactor {
 		for( int i = 0; i < numFields; i++ ) newFieldValues.add("");
 		Contact newContact = new Contact(newFieldValues);
 		guiCore.editContact("Add New Contact", newContact);
-		// todo: if successfull, add new contact to book
+		// todo: if successful, add new contact to book
 	}
 	
 	public void onEdit() {
