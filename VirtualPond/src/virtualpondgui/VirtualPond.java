@@ -3,6 +3,8 @@ package virtualpondgui;
 import java.awt.*;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.*;
 
@@ -15,6 +17,7 @@ public class VirtualPond implements Runnable, GUICore {
 	final static String USER_MANUAL = "https://www.assembla.com/spaces/cis422f15-team1/wiki/Software_Documentation";
 	private static URI URI_USER_MANUAL = null;
 	
+	private boolean isMac;
 	private JFrame mainFrame = null;
 	private MainContentPanel mainContentPanel = null;
 	private JFileChooser fileChooser = null;
@@ -24,6 +27,11 @@ public class VirtualPond implements Runnable, GUICore {
 	private VirtualAddressBook addressBook = null;
 	private boolean isAddressBookFresh = true;
 
+	// Constructor //
+	public VirtualPond(boolean isMac) {
+		this.isMac = isMac;
+	}
+	
 	// GUICore METHODS //
 	
 	/**
@@ -38,6 +46,17 @@ public class VirtualPond implements Runnable, GUICore {
 		makeStale();
 	}
 	
+	@Override
+	public void deleteContactsByIndex(int[] indices) {
+		if( indices == null || indices.length < 1 ) return;
+		// it is critical that contacts are removed from higher indices to lower,
+		// else the indices would become invalid after a removal.
+		Arrays.sort(indices);
+		ArrayList<Contact> contacts = addressBook.getContacts();
+		for( int i = indices.length - 1; i >= 0; i-- ) contacts.remove(indices[i]);
+		mainContentPanel.deleteContacts(indices, true);
+	}
+	
 	/**
 	 * @return true if user selected Save, else false
 	 */
@@ -45,6 +64,11 @@ public class VirtualPond implements Runnable, GUICore {
 	public Contact editContact(String title, Contact initialContact) {
 		EditContactDialog ecDialog = new EditContactDialog(mainFrame, title, addressBook, initialContact);
 		return ecDialog.getResult();
+	}
+	
+	@Override
+	public int[] getSelectedIndices() {
+		return mainContentPanel.getAllSelectedEntryRows();
 	}
 	
 	@Override
@@ -64,14 +88,14 @@ public class VirtualPond implements Runnable, GUICore {
 	public Component getMainWindow() {
 		return mainFrame;
 	}
-	
-	@Override
-	public Contact getSelectedContact() {
-		// TODO: determine if a row is selected in the table, if so, return it as a contact
-		// else return null
-		return null;
-	}
 
+	@Override
+	public Contact getContactByIndex(int index) {
+		if( index < 0 ) return null;
+		if( index >= addressBook.getContacts().size() ) return null;
+		return addressBook.getContacts().get(index);
+	}
+	
 	@Override
 	public URI getUserManualURI() {
 		if (URI_USER_MANUAL == null) {
@@ -83,6 +107,11 @@ public class VirtualPond implements Runnable, GUICore {
 			}
 		}
 		return URI_USER_MANUAL;
+	}
+	
+	@Override
+	public boolean isMac() {
+		return isMac;
 	}
 	
 	@Override
@@ -205,13 +234,15 @@ public class VirtualPond implements Runnable, GUICore {
 	 */
 	public static void createAndShowGUI(/* what args? */) {
 		// detect operating system
+		boolean isMac = false;
 		String OS = System.getProperty("os.name").toLowerCase();
 		if (OS.contains("mac")) { // do Mac stuff
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
+			isMac = true;
 		}
 
 		// ask Swing to use the Runnable of this class in a new thread
-		SwingUtilities.invokeLater(new VirtualPond());
+		SwingUtilities.invokeLater(new VirtualPond(isMac));
 	}
 	
 	/**

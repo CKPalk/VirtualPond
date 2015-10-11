@@ -1,5 +1,7 @@
 package virtualpondgui;
 
+import java.util.Arrays;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
@@ -23,12 +25,19 @@ public class ContactsTable extends JScrollPane {
 	public void addContact(int indexAdded) {
 		if( table == null ) return;
 		tableModel.fireTableRowsInserted(indexAdded, indexAdded);
-		System.out.println("Contact added");
 	}
 	
-	public int getSelectedRow() {
-		if( table.getSelectedRowCount() != 1 ) return -1;
-		return table.getSelectedRow();
+	public void deleteContacts(int[] indicesDeleted, boolean isSorted) {
+		if( table == null ) return;
+		if( !isSorted ) Arrays.sort(indicesDeleted);
+		for( int i = indicesDeleted.length - 1; i >= 0; i--) {
+			int index = indicesDeleted[i];
+			tableModel.fireTableRowsDeleted(index, index);
+		}
+	}
+	
+	public int[] getSelectedRows() {
+		return table.getSelectedRows();
 	}
 	
 	public void resetTable() {

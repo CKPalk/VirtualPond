@@ -20,11 +20,23 @@ public interface GUICore {
 	void addContact(Contact contact);
 	
 	/**
+	 * Deletes 0 or more contacts from the current address book.
+	 * @param indices an array of indices into the address book.
+	 */
+	void deleteContactsByIndex(int[] indices);
+	
+	/**
 	 * Pops up a modal Edit Contact dialog box.
 	 * @param contact the initial Contact to edit, which may be null.
 	 * @return the modified Contact, or null if the user cancelled.
 	 */
 	Contact editContact(String title, Contact contact);
+	
+	/**
+	 * Returns an array of selected contact indices.
+	 * @return an array of indices, which may be empty.
+	 */
+	int[] getSelectedIndices();
 	
 	VirtualAddressBook getCurrentAddressBook();
 	
@@ -33,17 +45,21 @@ public interface GUICore {
 	Component getMainWindow();
 	
 	/**
-	 * Returns a reference to the currently selected Contact,
-	 * if any. If fewer or more than 1 contact is selected,
-	 * returns null.
-	 * @return the selected contact else null.
+	 * Returns a reference to the indexed Contact.
+	 * @param index
+	 * @return the indexed Contact or null.
 	 */
-	Contact getSelectedContact();
-
+	Contact getContactByIndex(int index);
+	
 	/**
 	 * @return a URI to an HTML User Manual, or null.
 	 */
 	URI getUserManualURI();
+	
+	/**
+	 * @return true if some version of Mac computer, else false.
+	 */
+	boolean isMac();
 		
 	/**
 	 * Attempts to open a file and make it the current address book for the current window.

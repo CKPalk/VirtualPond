@@ -40,10 +40,14 @@ public class MainContentPanel extends JPanel {
 		contactsTable.addContact(indexAdded);
 	}
 	
-	public int getSelectedEntryRow() {
-		return contactsTable.getSelectedRow();
+	public void deleteContacts(int[] indices, boolean isSorted) {
+		contactsTable.deleteContacts(indices, isSorted);
 	}
 	
+	public int[] getAllSelectedEntryRows() {
+		return contactsTable.getSelectedRows();
+	}
+
 	public void resetContactsTable() {
 		contactsTable.resetTable();
 	}

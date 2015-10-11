@@ -1,5 +1,7 @@
 package virtualpondgui;
 
+import javax.swing.JOptionPane;
+
 import addressbook.Contact;
 
 public class ToolBarReactor implements ToolBar.Reactor {
@@ -14,7 +16,12 @@ public class ToolBarReactor implements ToolBar.Reactor {
 	}
 	
 	public void onEdit() {
-		Contact currentContact = guiCore.getSelectedContact();
+		int[] indices = guiCore.getSelectedIndices();
+		if( indices.length != 1 ) {
+			System.err.println("need exactly one entry selected to edit");
+			return;
+		}
+		Contact currentContact = guiCore.getContactByIndex(indices[0]);
 		if( currentContact == null ) {
 			System.err.println("error: nothing selected");
 		} else {
@@ -24,6 +31,17 @@ public class ToolBarReactor implements ToolBar.Reactor {
 	}
 	
 	public void onDelete() {
-		System.out.println("delete not implemented");
+		int[] selected = guiCore.getSelectedIndices();
+		if( selected.length > 0 ) {
+			String plural = selected.length == 1 ? "contact" : (selected.length + " contacts");
+			// TODO: Windows: "Yes, No", Mac: "No, Yes"
+			Object[] options = {"Yes", "No"};
+			int n = JOptionPane.showOptionDialog(guiCore.getMainWindow(),
+					"Are you sure you want to delete the selected " + plural +" from this address book?",
+					"Delete " + plural + "?", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
+			if( n == 0 ) { // Yes
+				guiCore.deleteContactsByIndex(selected);
+			}
+		}
 	}
 }
