@@ -21,6 +21,7 @@ public class MenuBarReactor implements MenuBar.Reactor {
 	}
 	
 	public void onFileNew() {
+		// TODO: we think that this should probably open a new window
 		System.out.println("File/New not implemented");
 	}
 	
@@ -49,25 +50,15 @@ public class MenuBarReactor implements MenuBar.Reactor {
 	}
 	
 	public void onFileClose() {
-		System.out.println("File/Close not implemented");
+		guiCore.closeFile();
 	}
 	
 	public void onFileSave() {
-		System.out.println("File/Save not implemented");
+		guiCore.saveFile();
 	}
 	
 	public void onFileSaveAs() {
-		// will probably want to move this so it can be shared with the Save and Open codes
-		JFileChooser fileChooser = guiCore.getFileChooser();
-		
-		// WARNING: this line blocks until the user makes a choice
-		int retCode = fileChooser.showSaveDialog(guiCore.getMainWindow());
-		if (retCode == JFileChooser.APPROVE_OPTION) {
-			File file = fileChooser.getSelectedFile();
-			guiCore.saveFile(file);
-		} else {
-			// the user selected Cancel or dismissed the dialog or there was an error
-		} 
+		guiCore.saveFileAs();
 	}
 	
 	public void onFileQuit() {

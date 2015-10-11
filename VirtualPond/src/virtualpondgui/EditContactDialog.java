@@ -37,7 +37,7 @@ public class EditContactDialog extends JDialog {
 		for( int i = 0; i < numFields; i++ ) {
 			Field field = fields.get(i);
 			String label = field.toString();
-			String initialValue = initialContact.getContactDataArray().get(i);
+			String initialValue = initialContact.getContactDataAt(i);
 			
 			EntryFieldEditor entryField = new EntryFieldEditor(label, initialValue, field);
 			entryFieldEditors.add(entryField);

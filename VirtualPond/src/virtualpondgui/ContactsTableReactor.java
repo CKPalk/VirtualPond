@@ -2,30 +2,29 @@ package virtualpondgui;
 
 import javax.swing.table.AbstractTableModel;
 
-import addressbook.VirtualAddressBook;
-
 public class ContactsTableReactor extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 
-	private VirtualAddressBook addressBook;
+	private GUICore guiCore;
+	
 	
 	public ContactsTableReactor(GUICore guiCore) {
-		addressBook = guiCore.getCurrentAddressBook();
+		this.guiCore = guiCore;
 	}
 
 	@Override
 	public int getRowCount() {
-		return addressBook.getContacts().size();
+		return guiCore.getCurrentAddressBook().getContacts().size();
 	}
 
 	@Override
 	public int getColumnCount() {
-		return addressBook.getFields().size();
+		return guiCore.getCurrentAddressBook().getFields().size();
 	}
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		return addressBook.getFieldAtIndex(columnIndex).toString();
+		return guiCore.getCurrentAddressBook().getFieldAtIndex(columnIndex).toString();
 	}
 
 	@Override
@@ -40,7 +39,7 @@ public class ContactsTableReactor extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return addressBook.getContacts().get(rowIndex).getContacts().get(columnIndex);
+		return guiCore.getCurrentAddressBook().getContacts().get(rowIndex).getContactDataAt(columnIndex);
 	}
 
 	@Override
@@ -48,57 +47,3 @@ public class ContactsTableReactor extends AbstractTableModel {
 		// TODO do nothing, because we're not editable this way
 	}
 }
-/*
-public class ContactsTableReactor implements ContactsTable.Reactor {
-	private VirtualAddressBook addressBook;
-	
-	public ContactsTableReactor(GUICore guiCore) {
-		addressBook = guiCore.getCurrentAddressBook();
-	}
-
-	@Override
-	public int getRowCount() {
-		return addressBook.getContacts().size();
-	}
-
-	@Override
-	public int getColumnCount() {
-		return addressBook.getFields().size();
-	}
-
-	@Override
-	public String getColumnName(int columnIndex) {
-		return addressBook.getFieldAtIndex(columnIndex).toString();
-	}
-
-	@Override
-	public Class<?> getColumnClass(int columnIndex) {
-		return String.class;
-	}
-
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return false;
-	}
-
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		return addressBook.getContacts().get(rowIndex).getContacts().get(columnIndex);
-	}
-
-	@Override
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		// TODO do nothing, because we're not editable this way
-	}
-
-	@Override
-	public void addTableModelListener(TableModelListener l) {
-		// TODO do nothing, because we don't like eave-droppers
-	}
-
-	@Override
-	public void removeTableModelListener(TableModelListener l) {
-		// TODO do nothing, because we don't like eave-droppers
-	}
-}
-*/

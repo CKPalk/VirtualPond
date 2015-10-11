@@ -47,7 +47,7 @@ public class MainContentPanel extends JPanel {
 	public int[] getAllSelectedEntryRows() {
 		return contactsTable.getSelectedRows();
 	}
-
+	
 	public void resetContactsTable() {
 		contactsTable.resetTable();
 	}

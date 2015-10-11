@@ -19,6 +19,7 @@ public class ContactsTable extends JScrollPane {
 	
 	public ContactsTable(GUICore guiCore) {
 		this.guiCore = guiCore;
+		table = null;
 		resetTable();
 	}
 
@@ -39,14 +40,17 @@ public class ContactsTable extends JScrollPane {
 	public int[] getSelectedRows() {
 		return table.getSelectedRows();
 	}
-	
+
 	public void resetTable() {
-		table = null;
-		if( guiCore.getCurrentAddressBook() != null ) {
+		if( table == null && guiCore.getCurrentAddressBook() != null ) {
 			tableModel = new ContactsTableReactor(guiCore);
 			table = new JTable(tableModel);
 			setViewportView(table);
-		}		
+			System.out.println("resetTable()");
+		} else if( tableModel != null ) {
+			tableModel.fireTableStructureChanged();
+			tableModel.fireTableDataChanged();
+		}
 	}
 	
 	public void updateContact(int index) {

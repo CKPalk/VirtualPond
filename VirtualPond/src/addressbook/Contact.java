@@ -47,7 +47,10 @@ public class Contact implements Iterable<String> {
 		return this.contactDataArray;
 	}
 	public String getContactDataAt(int index) {
-		return this.contactDataArray.get(index);
+		if( this != null && contactDataArray != null && index < contactDataArray.size() ) {
+			return contactDataArray.get(index);
+		}
+		return "";
 	}
 	
 	// toString()

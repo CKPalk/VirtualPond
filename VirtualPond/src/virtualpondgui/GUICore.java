@@ -20,6 +20,12 @@ public interface GUICore {
 	void addContact(Contact contact);
 	
 	/**
+	 * If there is an unmodified file open, then prompts to save.
+	 * Else just prepares default empty address book.
+	 */
+	void closeFile();
+
+	/**
 	 * Deletes 0 or more contacts from the current address book.
 	 * @param indices an array of indices into the address book.
 	 */
@@ -63,10 +69,15 @@ public interface GUICore {
 	void openFile(File file);
 	
 	/**
-	 * Attempts to save a file using our signature .pond™ extension! 
-	 * @param file an extant file to save
+	 * Attempts to save the current address book to the current file,
+	 * or prompts the user if there is no current filename.
 	 */
-	void saveFile(File file);
+	void saveFile();
+	
+	/**
+	 * Prompts the user for a new filename, and attempts to save there.
+	 */
+	void saveFileAs();
 	
 	/**
 	 * Overwrites a contact at an existing index with new values.
