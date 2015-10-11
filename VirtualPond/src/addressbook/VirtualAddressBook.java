@@ -93,7 +93,6 @@ public class VirtualAddressBook {
 		return contacts;
 	}
 	
-	
 	// --- Private Class Methods ---
 	private static VirtualAddressBook getDefaultBook() {
 		return new VirtualBookReader(DEFAULT_DATA_FILENAME, true).read();

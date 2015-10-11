@@ -1,7 +1,6 @@
 package virtualpondgui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 
 import javax.swing.Box;
 import javax.swing.JComponent;
@@ -35,6 +34,10 @@ public class MainContentPanel extends JPanel {
 		editArea.setMinimumSize(new Dimension(1, 100));
 		add(editArea, BorderLayout.SOUTH);
 		*/
+	}
+	
+	public void addContactToTable(int indexAdded) {
+		contactsTable.addContact(indexAdded);
 	}
 	
 	public void resetContactsTable() {

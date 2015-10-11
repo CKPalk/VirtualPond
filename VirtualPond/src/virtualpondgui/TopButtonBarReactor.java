@@ -1,7 +1,5 @@
 package virtualpondgui;
 
-import java.util.ArrayList;
-
 import addressbook.Contact;
 
 public class TopButtonBarReactor implements TopButtonBar.Reactor {
@@ -12,12 +10,7 @@ public class TopButtonBarReactor implements TopButtonBar.Reactor {
 	}
 	
 	public void onAdd() {
-		ArrayList<String> newFieldValues = new ArrayList<>();
-		int numFields = guiCore.getCurrentAddressBook().getFields().size();
-		for( int i = 0; i < numFields; i++ ) newFieldValues.add("");
-		Contact newContact = new Contact(newFieldValues);
-		guiCore.editContact("Add New Contact", newContact);
-		// todo: if successful, add new contact to book
+		guiCore.addContact( guiCore.editContact("Add New Contact", null) );
 	}
 	
 	public void onEdit() {

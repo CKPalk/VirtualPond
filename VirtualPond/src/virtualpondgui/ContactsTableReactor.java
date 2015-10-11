@@ -1,9 +1,54 @@
 package virtualpondgui;
 
-import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 
 import addressbook.VirtualAddressBook;
 
+public class ContactsTableReactor extends AbstractTableModel {
+	private static final long serialVersionUID = 1L;
+
+	private VirtualAddressBook addressBook;
+	
+	public ContactsTableReactor(GUICore guiCore) {
+		addressBook = guiCore.getCurrentAddressBook();
+	}
+
+	@Override
+	public int getRowCount() {
+		return addressBook.getContacts().size();
+	}
+
+	@Override
+	public int getColumnCount() {
+		return addressBook.getFields().size();
+	}
+
+	@Override
+	public String getColumnName(int columnIndex) {
+		return addressBook.getFieldAtIndex(columnIndex).toString();
+	}
+
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		return String.class;
+	}
+
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return false;
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		return addressBook.getContacts().get(rowIndex).getContacts().get(columnIndex);
+	}
+
+	@Override
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		// TODO do nothing, because we're not editable this way
+	}
+}
+/*
 public class ContactsTableReactor implements ContactsTable.Reactor {
 	private VirtualAddressBook addressBook;
 	
@@ -56,3 +101,4 @@ public class ContactsTableReactor implements ContactsTable.Reactor {
 		// TODO do nothing, because we don't like eave-droppers
 	}
 }
+*/

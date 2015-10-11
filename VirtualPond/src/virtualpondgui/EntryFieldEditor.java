@@ -12,9 +12,8 @@ import javax.swing.JTextField;
 import addressbook.Field;
 
 public class EntryFieldEditor extends JPanel {
-	// needs to have a name
-	// needs to have an editable field (we may want to toggle editability)
-	// needs a validator
+	private static final long serialVersionUID = 1L;
+
 	private JTextField field;
 	
 	public EntryFieldEditor(String name, String initialContent, Field contactField) {

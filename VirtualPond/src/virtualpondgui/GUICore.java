@@ -13,11 +13,18 @@ public interface GUICore {
 	// TODO: expose public methods of GUICore
 	
 	/**
-	 * Pops up a modal Edit Contact dialog box.
-	 * @param contact the initial Contact to edit.
-	 * @return false if Cancelled, else true.
+	 * Does nothing if contact == null,
+	 * else adds this contact to the current address book.
+	 * @param contact an extant Contact or null.
 	 */
-	boolean editContact(String title, Contact contact);
+	void addContact(Contact contact);
+	
+	/**
+	 * Pops up a modal Edit Contact dialog box.
+	 * @param contact the initial Contact to edit, which may be null.
+	 * @return the modified Contact, or null if the user cancelled.
+	 */
+	Contact editContact(String title, Contact contact);
 	
 	VirtualAddressBook getCurrentAddressBook();
 	

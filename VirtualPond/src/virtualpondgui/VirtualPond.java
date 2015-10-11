@@ -24,16 +24,27 @@ public class VirtualPond implements Runnable, GUICore {
 	private VirtualAddressBook addressBook = null;
 	private boolean isAddressBookFresh = true;
 
-	/* GUICore methods:
-	 * These methods are exposed to Reactors,
-	 * which are classes that process user input from the GUI.
-	 */
+	// GUICore METHODS //
 	
+	/**
+	 * Adds a contact to the address book, and displays it
+	 * in the table.
+	 */
 	@Override
-	public boolean editContact(String title, Contact contact) {
-		EditContactDialog ecDialog = new EditContactDialog(mainFrame, title, addressBook, contact);
-		// TODO: show dialog, decide which button was pressed at the end.
-		return true;
+	public void addContact(Contact contact) {
+		if( contact == null ) return;
+		addressBook.newContact(contact);
+		mainContentPanel.addContactToTable(addressBook.getContacts().size());
+		makeStale();
+	}
+	
+	/**
+	 * @return true if user selected Save, else false
+	 */
+	@Override
+	public Contact editContact(String title, Contact initialContact) {
+		EditContactDialog ecDialog = new EditContactDialog(mainFrame, title, addressBook, initialContact);
+		return ecDialog.getResult();
 	}
 	
 	@Override
@@ -107,15 +118,21 @@ public class VirtualPond implements Runnable, GUICore {
 		if( !commitAddressBookToFile() ) {
 			// TODO: we weren't able to commit the address book to a file, what do we do?
 			// for now, print an error and continue to exit
-			System.out.println("error: commitAddressBookToFile() failed!");
+			System.err.println("commitAddressBookToFile() failed!");
 		}
 		System.exit(0);
 	}
 	
-	/* Private methods:
-	 * These methods do secret things,
-	 * that other classes don't need to know about.
+	// LOCAL METHODS //
+
+	/**
+	 * Falsifies freshness and updates window title.
 	 */
+	private void makeStale() {
+		if( !isAddressBookFresh ) return;
+		isAddressBookFresh = false;
+		updateWindowTitle();
+	}
 
 	/**
 	 * Attempts to write out the current address book to a file.
@@ -173,6 +190,10 @@ public class VirtualPond implements Runnable, GUICore {
 
 		mainFrame.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 		mainFrame.pack();
+		
+		// center window on desktop		
+		mainFrame.setLocationRelativeTo(null);
+		
 		mainFrame.setVisible(true);
 		
 

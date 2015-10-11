@@ -12,16 +12,26 @@ public class ContactsTable extends JScrollPane {
 	}
 	
 	private GUICore guiCore;
+	private JTable table;
+	private ContactsTableReactor tableModel;
 	
 	public ContactsTable(GUICore guiCore) {
 		this.guiCore = guiCore;
 		resetTable();
 	}
+
+	public void addContact(int indexAdded) {
+		if( table == null ) return;
+		tableModel.fireTableRowsInserted(indexAdded, indexAdded);
+		System.out.println("Contact added");
+	}
 	
 	public void resetTable() {
+		table = null;
 		if( guiCore.getCurrentAddressBook() != null ) {
-			ContactsTableReactor contactsTableReactor = new ContactsTableReactor(guiCore);
-			setViewportView(new JTable(contactsTableReactor));
+			tableModel = new ContactsTableReactor(guiCore);
+			table = new JTable(tableModel);
+			setViewportView(table);
 		}		
 	}
 }
