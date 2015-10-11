@@ -68,6 +68,7 @@ public class VirtualBookWriter implements VirtualBookIO {
 		return addressBook.fields.stream().map(Field::getValCode).collect(Collectors.joining(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX));
 	}
 	
+	// TODO: figure out why this crashes with an ArrayList index out of bounds exception: Index 0, Size 0
 	public ArrayList<String> getPrintFormattedContactsArray() {
 		ArrayList<String> formattedContacts = new ArrayList<String>(addressBook.contacts.size());
 		for (int contact_index = 0; contact_index < addressBook.contacts.size(); contact_index++) {

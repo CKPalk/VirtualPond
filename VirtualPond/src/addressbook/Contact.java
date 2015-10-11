@@ -6,7 +6,11 @@ import java.util.Iterator;
 
 public class Contact implements Iterable<String> {
 
-	// --- Constructor ---
+	// --- Constructors ---
+	public Contact(int numFields) {
+		contactDataArray = new ArrayList<>();
+		for( int i = 0; i < numFields; i++ ) contactDataArray.add("");
+	}
 	public Contact(ArrayList<String> contactDataArray) {
 		this.contactDataArray = contactDataArray;
 	}

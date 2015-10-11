@@ -1,5 +1,7 @@
 package virtualpondgui;
 
+import addressbook.Contact;
+
 public class TopButtonBarReactor implements TopButtonBar.Reactor {
 	private GUICore guiCore;
 	
@@ -8,11 +10,17 @@ public class TopButtonBarReactor implements TopButtonBar.Reactor {
 	}
 	
 	public void onAdd() {
-		System.out.println("add not implemented");
+		guiCore.addContact( guiCore.editContact("Add New Contact", null) );
 	}
 	
 	public void onEdit() {
-		System.out.println("edit not implemented");
+		Contact currentContact = guiCore.getSelectedContact();
+		if( currentContact == null ) {
+			System.err.println("error: nothing selected");
+		} else {
+			guiCore.editContact("Edit Contact", currentContact);
+			// todo: refresh contact in view
+		}
 	}
 	
 	public void onDelete() {

@@ -16,17 +16,41 @@ public class VirtualPond implements Runnable, GUICore {
 	private static URI URI_USER_MANUAL = null;
 	
 	private JFrame mainFrame = null;
+	private MainContentPanel mainContentPanel = null;
 	private JFileChooser fileChooser = null;
 
 	// current address book information
 	private String addressBookFileName = null;
 	private VirtualAddressBook addressBook = null;
 	private boolean isAddressBookFresh = true;
+
+	// GUICore METHODS //
 	
-	/* GUICore methods:
-	 * These methods are exposed to Reactors,
-	 * which are classes that process user input from the GUI.
+	/**
+	 * Adds a contact to the address book, and displays it
+	 * in the table.
 	 */
+	@Override
+	public void addContact(Contact contact) {
+		if( contact == null ) return;
+		addressBook.newContact(contact);
+		mainContentPanel.addContactToTable(addressBook.getContacts().size());
+		makeStale();
+	}
+	
+	/**
+	 * @return true if user selected Save, else false
+	 */
+	@Override
+	public Contact editContact(String title, Contact initialContact) {
+		EditContactDialog ecDialog = new EditContactDialog(mainFrame, title, addressBook, initialContact);
+		return ecDialog.getResult();
+	}
+	
+	@Override
+	public VirtualAddressBook getCurrentAddressBook() {
+		return addressBook;
+	}
 	
 	@Override
 	public JFileChooser getFileChooser() {
@@ -39,6 +63,13 @@ public class VirtualPond implements Runnable, GUICore {
 	@Override
 	public Component getMainWindow() {
 		return mainFrame;
+	}
+	
+	@Override
+	public Contact getSelectedContact() {
+		// TODO: determine if a row is selected in the table, if so, return it as a contact
+		// else return null
+		return null;
 	}
 
 	@Override
@@ -56,26 +87,29 @@ public class VirtualPond implements Runnable, GUICore {
 	
 	@Override
 	public void openFile(File file) {
+		// TODO: make this method cleaner: I feel that there are going to be bugs popping up around here.
 		if( addressBook != null) { // there is already an open address book
 			if( !commitAddressBookToFile() ) { // we weren't able to save the current address book
 				System.out.println("error: openFile(...) tried to commitAddressBookToFile() and failed!");
 				return; // DON'T open a new file
 			}
-		} else {
-			if( file == null ) {
-				file = new File("./.address_book_default_data.pond™");
-				addressBookFileName = null;
-			} else {
-				addressBookFileName = file.getName();
-			}
-			System.out.println("attempting to open file" + file.getAbsolutePath());
-			VirtualBookReader vbReader = new VirtualBookReader(file);
-			addressBook = vbReader.read();
-			// TODO: check that the addressBook was correctly opened
-			// for now, assume that it was
-			isAddressBookFresh = false;
-			updateWindowTitle();
 		}
+		if( file == null ) {
+			file = new File("./.address_book_default_data.pond™");
+			addressBookFileName = null;
+		} else {
+			addressBookFileName = file.getName();
+		}
+		System.out.println("attempting to open file" + file.getAbsolutePath());
+		VirtualBookReader vbReader = new VirtualBookReader(file);
+		addressBook = vbReader.read();
+		// TODO: check that the addressBook was correctly opened
+		// for now, assume that it was
+		isAddressBookFresh = true;
+		updateWindowTitle();
+		mainContentPanel.resetContactsTable();
+		mainContentPanel.resetEditArea();
+		mainFrame.pack();
 	}
 	
 	@Override
@@ -84,15 +118,21 @@ public class VirtualPond implements Runnable, GUICore {
 		if( !commitAddressBookToFile() ) {
 			// TODO: we weren't able to commit the address book to a file, what do we do?
 			// for now, print an error and continue to exit
-			System.out.println("error: commitAddressBookToFile() failed!");
+			System.err.println("commitAddressBookToFile() failed!");
 		}
 		System.exit(0);
 	}
 	
-	/* Private methods:
-	 * These methods do secret things,
-	 * that other classes don't need to know about.
+	// LOCAL METHODS //
+
+	/**
+	 * Falsifies freshness and updates window title.
 	 */
+	private void makeStale() {
+		if( !isAddressBookFresh ) return;
+		isAddressBookFresh = false;
+		updateWindowTitle();
+	}
 
 	/**
 	 * Attempts to write out the current address book to a file.
@@ -140,18 +180,23 @@ public class VirtualPond implements Runnable, GUICore {
 	 */
 	public void run() {
 		mainFrame = new JFrame(TITLE);
-
+		
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		mainFrame.setJMenuBar(new MenuBar(this));
-		
-		mainFrame.setContentPane(new MainContentPanel(this));
+
+		mainContentPanel = new MainContentPanel(this);
+		mainFrame.setContentPane(mainContentPanel);
 
 		mainFrame.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 		mainFrame.pack();
+		
+		// center window on desktop		
+		mainFrame.setLocationRelativeTo(null);
+		
 		mainFrame.setVisible(true);
 		
-		/* open default empty file */
+
 		openFile(null);
 	}
 

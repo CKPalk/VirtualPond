@@ -18,18 +18,18 @@ public class TopButtonBar extends JPanel {
 	private JButton buttonAdd, buttonEdit, buttonDelete;
 	
 	public TopButtonBar(Reactor reactor) {
-		super(new FlowLayout());
+		super(new FlowLayout(FlowLayout.LEFT));
 
 		// buttons
 		buttonAdd = new JButton("Add");
 		buttonEdit = new JButton("Edit");
 		buttonDelete = new JButton("Delete");
-		
+
 		// reactions
 		buttonAdd.addActionListener(event -> reactor.onAdd());
 		buttonEdit.addActionListener(event -> reactor.onEdit());
 		buttonDelete.addActionListener(event -> reactor.onDelete());
-		
+
 		// add to self
 		add(buttonAdd);
 		add(buttonEdit);
