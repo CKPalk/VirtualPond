@@ -26,6 +26,11 @@ public class ContactsTable extends JScrollPane {
 		System.out.println("Contact added");
 	}
 	
+	public int getSelectedRow() {
+		if( table.getSelectedRowCount() != 1 ) return -1;
+		return table.getSelectedRow();
+	}
+	
 	public void resetTable() {
 		table = null;
 		if( guiCore.getCurrentAddressBook() != null ) {

@@ -6,7 +6,7 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class TopButtonBar extends JPanel {
+public class ToolBar extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	public interface Reactor {
@@ -17,7 +17,7 @@ public class TopButtonBar extends JPanel {
 	
 	private JButton buttonAdd, buttonEdit, buttonDelete;
 	
-	public TopButtonBar(Reactor reactor) {
+	public ToolBar(Reactor reactor) {
 		super(new FlowLayout(FlowLayout.LEFT));
 
 		// buttons

@@ -2,10 +2,10 @@ package virtualpondgui;
 
 import addressbook.Contact;
 
-public class TopButtonBarReactor implements TopButtonBar.Reactor {
+public class ToolBarReactor implements ToolBar.Reactor {
 	private GUICore guiCore;
 	
-	public TopButtonBarReactor(GUICore guiCore) {
+	public ToolBarReactor(GUICore guiCore) {
 		this.guiCore = guiCore;
 	}
 	

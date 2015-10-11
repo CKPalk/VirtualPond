@@ -16,7 +16,7 @@ public class MainContentPanel extends JPanel {
 	public MainContentPanel(GUICore guiCore) {
 		super(new BorderLayout());
 
-		buttonBar = new TopButtonBar(new TopButtonBarReactor(guiCore));
+		buttonBar = new ToolBar(new ToolBarReactor(guiCore));
 		add(buttonBar, BorderLayout.NORTH);
 
 		add(Box.createHorizontalStrut(10), BorderLayout.WEST);
@@ -38,6 +38,10 @@ public class MainContentPanel extends JPanel {
 	
 	public void addContactToTable(int indexAdded) {
 		contactsTable.addContact(indexAdded);
+	}
+	
+	public int getSelectedEntryRow() {
+		return contactsTable.getSelectedRow();
 	}
 	
 	public void resetContactsTable() {
