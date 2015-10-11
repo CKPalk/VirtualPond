@@ -74,7 +74,9 @@ public class VirtualAddressBook {
 	}
 	public void newContact(Contact contact) {
 		contacts.add(contact);
-		sortByFieldAtIndex(indexToSortBy);
+		
+		// Do not sort when adding a new contact
+		// sortByFieldAtIndex(indexToSortBy);
 	}
 	public void setContactAtIndexes(String newData, int contactIndex, int fieldIndex) {
 		contacts.get(contactIndex).editDataAtIndex(newData, fieldIndex);;
@@ -85,9 +87,6 @@ public class VirtualAddressBook {
 	}
 	public ArrayList<Field> getFields() {
 		return fields;
-	}
-	public Contact getContactAtIndex(int index) {
-		return contacts.get(index);
 	}
 	public ArrayList<Contact> getContacts() {
 		return contacts;

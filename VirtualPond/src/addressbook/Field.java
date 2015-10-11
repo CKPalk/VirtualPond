@@ -47,8 +47,9 @@ public class Field {
 	}
 	
 	public boolean validate(String data) {
-		if (data.length() == 0)
+		if (data.length() == 0) {
 			return required ? false : true;
+		}
 		
 		switch(this.valCode) {
 		case NONE:
