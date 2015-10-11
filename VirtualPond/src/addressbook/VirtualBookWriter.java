@@ -2,20 +2,14 @@ package addressbook;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 
 public class VirtualBookWriter implements VirtualBookIO {
 
-	// --- Constructor ---
-	public VirtualBookWriter(VirtualAddressBook addressBook) {
-		this.addressBook = addressBook;
-		this.file = new File(this.toString());
-	}
 	public VirtualBookWriter(VirtualAddressBook addressBook, File file) {
 		this.addressBook = addressBook;
 		this.file = file;
@@ -32,31 +26,36 @@ public class VirtualBookWriter implements VirtualBookIO {
 	// FUNCTIONALITY:
 	public void write() {
 		
-		if (!saveLocationValid()) {
-			// Prompt user that the folder name $USER_SAVETO_FOLDER_NAME is being created to save their calendar in.
-			buildUserFolders(USER_SAVETO_FOLDER_NAME);
-		}
-		
 		try {
-				
-			FileOutputStream fos = new FileOutputStream(file);
 			
-			BufferedWriter file_writer = new BufferedWriter(new OutputStreamWriter(fos));
+			// Create a new file if necessary
+			if (!file.exists()) {
+				file.createNewFile();
+			}
 			
-			// Print header lines separated by our spacing element
-			file_writer.write(getPrintFormattedFields() + "\n");
-			file_writer.write(getPrintFormattedFieldValidation() + "\n");
-			file_writer.write(String.join("\n", getPrintFormattedContactsArray()));
+			// Check read and write access
+			if(file.canRead()&&file.canWrite()) {//can read and write free to do what is needed
+			   System.out.println("Assured file write permissions.");
+			}else {
+				System.err.println("Can't read or write to files.");
+			}
 			
-			file_writer.close();
+			FileWriter file_writer = new FileWriter(file.getAbsolutePath());
+			BufferedWriter buffered_writer = new BufferedWriter(file_writer);
+			
+			// Print header line separated by our spacing element
+			buffered_writer.write(getPrintFormattedFields() + "\n");
+			buffered_writer.write(String.join("\n", getPrintFormattedContactsArray()));
+			
+			buffered_writer.close();
+
+			System.out.println("PRINTING BOOK TO: " + file.getAbsolutePath());
 				
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			// File pointer broken.
 			e.printStackTrace();
 		}
-		
-		System.out.println("PRINTING BOOK");
-		
 		
 	}
 	
@@ -64,25 +63,15 @@ public class VirtualBookWriter implements VirtualBookIO {
 		return addressBook.fields.stream().map(Object::toString).collect(Collectors.joining(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX));
 	}
 	
-	public String getPrintFormattedFieldValidation() {
-		return addressBook.fields.stream().map(Field::getValCode).collect(Collectors.joining(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX));
-	}
 	
 	// TODO: figure out why this crashes with an ArrayList index out of bounds exception: Index 0, Size 0
 	public ArrayList<String> getPrintFormattedContactsArray() {
 		ArrayList<String> formattedContacts = new ArrayList<String>(addressBook.contacts.size());
+		System.out.println(addressBook.contacts.size());
 		for (int contact_index = 0; contact_index < addressBook.contacts.size(); contact_index++) {
-			formattedContacts.set(contact_index, addressBook.contacts.get(contact_index).getContactDataArray().stream().map(Object::toString).collect(Collectors.joining(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX)));
+			formattedContacts.add(addressBook.contacts.get(contact_index).getContactDataArray().stream().map(Object::toString).collect(Collectors.joining(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX)));
 		}
 		return formattedContacts;
-	}
-	
-	public static boolean saveLocationValid() {
-		return new File("./" + USER_SAVETO_FOLDER_NAME).exists();
-	}
-	
-	public static void buildUserFolders(String foldername) {
-		new File("./" + foldername).mkdir();
 	}
 	
 	

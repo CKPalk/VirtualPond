@@ -2,9 +2,8 @@ package addressbook;
 
 public class Field {
 
-	public Field(String data, InputValidationCode code, boolean required) {
+	public Field(String data, boolean required) {
 		this.data = data;
-		this.valCode = code;
 		this.required = required;
 	}
 	
@@ -47,9 +46,13 @@ public class Field {
 	}
 	
 	public boolean validate(String data) {
-		if (data.length() == 0) {
-			return required ? false : true;
-		}
+		
+		// TODO: Complete data validation when we come up with a system
+		return true;
+		
+		
+		
+		/* ReGeX validators
 		
 		switch(this.valCode) {
 		case NONE:
@@ -67,7 +70,10 @@ public class Field {
 		default: // Shouldn't happen.
 			System.err.println("Validation code did not hit when validating string #" + data);
 			return false;
-		} 
+		}
+		
+		*/
+		
 	}
 
 }

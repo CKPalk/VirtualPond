@@ -132,6 +132,12 @@ public class VirtualPond implements Runnable, GUICore {
 	}
 	
 	@Override
+	public void saveFile(File file) {
+		// TODO: add check on whether the save completed or not
+		commitAddressBookToFile();
+	}
+	
+	@Override
 	public void updateContactAtIndex(int index, Contact contact) {
 		if( index < 0 || contact == null ) return;
 		addressBook.getContacts().set(index, contact);
@@ -175,14 +181,18 @@ public class VirtualPond implements Runnable, GUICore {
 	private boolean commitAddressBookToFile() {
 		if( isAddressBookFresh ) return true; // nothing to do
 		// else we need to make sure we have a filename for saving to
+		
 		File fileToSaveTo = null;
-		if( addressBookFileName == null ) {
+		// WARNING: I changed this comparator and I don't know what effect it causes
+		// but it got the write working as opening a file means it has a name I guess.
+		if( addressBookFileName != null ) {
 			// we don't have a name, so we need to ask the user for one
 			JFileChooser fc = getFileChooser();
 
 			int retCode = fc.showSaveDialog(getMainWindow());
 			if (retCode == JFileChooser.APPROVE_OPTION) {
 				fileToSaveTo = fileChooser.getSelectedFile();
+
 			} else {
 				return false;
 			}
@@ -249,4 +259,6 @@ public class VirtualPond implements Runnable, GUICore {
 	public static void main(String[] args) {
 		createAndShowGUI();
 	}
+
+	
 }

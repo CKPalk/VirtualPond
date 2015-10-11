@@ -8,7 +8,7 @@ import java.util.Comparator;
 public class VirtualAddressBook {
 	// Final static members
 	public static final String DEFAULT_DATA_FILENAME = "address_book_default_data"; // will be *.pondï¿½
-	public static final String FILE_EXTENSION = "pondâ„¢";
+	public static final String FILE_EXTENSION = "pond™";
 	
 	// --- Constructor ---
 	public VirtualAddressBook() {

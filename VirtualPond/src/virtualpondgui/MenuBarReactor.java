@@ -57,7 +57,17 @@ public class MenuBarReactor implements MenuBar.Reactor {
 	}
 	
 	public void onFileSaveAs() {
-		System.out.println("File/SaveAs not implemented");
+		// will probably want to move this so it can be shared with the Save and Open codes
+		JFileChooser fileChooser = guiCore.getFileChooser();
+		
+		// WARNING: this line blocks until the user makes a choice
+		int retCode = fileChooser.showSaveDialog(guiCore.getMainWindow());
+		if (retCode == JFileChooser.APPROVE_OPTION) {
+			File file = fileChooser.getSelectedFile();
+			guiCore.saveFile(file);
+		} else {
+			// the user selected Cancel or dismissed the dialog or there was an error
+		} 
 	}
 	
 	public void onFileQuit() {

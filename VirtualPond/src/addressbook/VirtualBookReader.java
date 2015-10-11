@@ -30,8 +30,6 @@ public class VirtualBookReader implements VirtualBookIO {
 	// FUNCTIONALITY:
 	public VirtualAddressBook read() {
 		
-		System.out.println(file);
-		
 		Scanner file_in;
 		try {
 			file_in = new Scanner(file);
@@ -40,7 +38,6 @@ public class VirtualBookReader implements VirtualBookIO {
 			
 			// Read first two lines as field information
 			String[] field_data = file_in.nextLine().split(FILE_CHARACTER_DIVIDER_REGEX);
-			String[] field_info = file_in.nextLine().split(FILE_CHARACTER_DIVIDER_REGEX);
 			
 			int cell_count = field_data.length;
 			
@@ -50,11 +47,10 @@ public class VirtualBookReader implements VirtualBookIO {
 			
 			for (int field_index = 0; field_index < cell_count; field_index++) {
 				try {
-					InputValidationCode valCode = Field.resolveValidationCode(field_info[field_index]);
-					fields.add(new Field(field_data[field_index], valCode, DEFAULT_REQUIRED_FIELD_BOOL)); // Set field required to false by default (no current way to read required or not)
+					fields.add(new Field(field_data[field_index], DEFAULT_REQUIRED_FIELD_BOOL)); // Set field required to false by default (no current way to read required or not)
 				}
 				catch (IndexOutOfBoundsException e) {
-					System.err.println("Field data corrupt, mismatch entry count. " + e.getMessage());
+					System.err.println("Field data corrupt, mismatch entry count.\n" + e.getMessage());
 				}
 			}
 			

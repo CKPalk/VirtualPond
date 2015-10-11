@@ -63,6 +63,12 @@ public interface GUICore {
 	void openFile(File file);
 	
 	/**
+	 * Attempts to save a file using our signature .pond™ extension! 
+	 * @param file an extant file to save
+	 */
+	void saveFile(File file);
+	
+	/**
 	 * Overwrites a contact at an existing index with new values.
 	 * @param index the index of the modification.
 	 * @param contact the new values to put there.
@@ -75,4 +81,5 @@ public interface GUICore {
 	 * may not actually exit the program. 
 	 */
 	void quit();
+	
 }
