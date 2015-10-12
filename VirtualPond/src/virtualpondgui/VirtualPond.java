@@ -226,7 +226,8 @@ public class VirtualPond implements Runnable, GUICore {
 		// TODO: check if the write succeeded; for now assume it did
 		addressBookName = fileToSaveTo.getName();
 		addressBookFileName = fileToSaveTo.getAbsolutePath();
-		makeFresh();
+		isStale = false;
+		updateWindowTitle();
 		return true;
 	}
 	
