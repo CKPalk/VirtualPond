@@ -213,7 +213,7 @@ public class VirtualPond implements Runnable, GUICore {
 			JFileChooser fc = getFileChooser();
 			int retCode = fc.showSaveDialog(getMainWindow());
 			if (retCode == JFileChooser.APPROVE_OPTION) {
-				fileToSaveTo = fileChooser.getSelectedFile();
+				fileToSaveTo = enforceOurFileExtension(fileChooser.getSelectedFile());
 			} else {
 				return false;
 			}
