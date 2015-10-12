@@ -46,7 +46,6 @@ public class ContactsTable extends JScrollPane {
 			tableModel = new ContactsTableReactor(guiCore);
 			table = new JTable(tableModel);
 			setViewportView(table);
-			System.out.println("resetTable()");
 		} else if( tableModel != null ) {
 			tableModel.fireTableStructureChanged();
 			tableModel.fireTableDataChanged();

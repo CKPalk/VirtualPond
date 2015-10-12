@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.FileChooserUI;
 
 import addressbook.*;
 
@@ -22,10 +25,10 @@ public class VirtualPond implements Runnable, GUICore {
 	private JFileChooser fileChooser = null;
 
 	// current address book information
-	private String addressBookFileName = null;
-	private String addressBookFileNameFull = null;
-	private VirtualAddressBook addressBook = null;
-	private boolean isAddressBookFresh = true;
+	private String addressBookName = null; // this is for display purposes only, and should not be used for file interactions
+	private String addressBookFileName = null; // if this is null, then the user hasn't chosen a file name yet
+	private VirtualAddressBook addressBook = null; // we don't want this to be null: load a default empty VirtualAddressBook ASAP
+	private boolean isStale = false; // true => there are unsaved changes.
 	
 	// GUICore METHODS //
 	
@@ -43,9 +46,7 @@ public class VirtualPond implements Runnable, GUICore {
 	
 	@Override
 	public void closeFile() {
-		if( commitAddressBookToFileIfStale() ) {
-			openFile(null);
-		}
+		prepareEmptyBook();
 	}
 	
 	@Override
@@ -83,6 +84,8 @@ public class VirtualPond implements Runnable, GUICore {
 	public JFileChooser getFileChooser() {
 		if( fileChooser == null ) {
 			fileChooser = new JFileChooser();
+			FileFilter fileFilter = new FileNameExtensionFilter("Pond Address Book", "pond", "pond™"); 
+			fileChooser.setFileFilter(fileFilter);
 		}
 		return fileChooser;
 	}
@@ -111,34 +114,27 @@ public class VirtualPond implements Runnable, GUICore {
 		}
 		return URI_USER_MANUAL;
 	}
-	
+
 	@Override
 	public void openFile(File file) {
-		// TODO: make this method cleaner: I feel that there are going to be bugs popping up around here.
-		if( addressBook != null) { // there is already an open address book
-			if( !commitAddressBookToFileIfStale() ) { // we weren't able to save the current address book
-				System.out.println("error: openFile(...) tried to commitAddressBookToFile() and failed!");
-				return; // DON'T open a new file
-			}
-		}
-		if( file == null ) {
-			file = new File("./.address_book_default_data.pond™");
-			addressBookFileName = "untitled";
-			addressBookFileNameFull = null;
-		} else {
-			addressBookFileName = file.getName();
-			addressBookFileNameFull = file.getAbsolutePath();
-		}
-		System.out.println("attempting to open file" + file.getAbsolutePath());
-		VirtualBookReader vbReader = new VirtualBookReader(file);
-		addressBook = vbReader.read();
-		// TODO: check that the addressBook was correctly opened
-		// for now, assume that it was
-		isAddressBookFresh = true;
+		writeUnsavedChangesToFile();
+		addressBook = VirtualAddressBook.createFromFile(file);
+		addressBookName = file.getName();
+		addressBookFileName = file.getAbsolutePath();
 		mainContentPanel.resetContactsTable();
-		//mainContentPanel.resetEditArea();
+		isStale = false;
 		updateWindowTitle();
-		mainFrame.pack();
+	}
+	
+	@Override
+	public void prepareEmptyBook() {
+		writeUnsavedChangesToFile(); // takes care of the last address book we had loaded, if any
+		addressBook = VirtualAddressBook.createDefaultBook(); // gives us default fields with no contacts
+		addressBookName = "untitled"; // what will show up in the window title
+		addressBookFileName = null; // the file actually associated with this address book
+		mainContentPanel.resetContactsTable(); // refresh the table
+		isStale = false;
+		updateWindowTitle();
 	}
 	
 	@Override
@@ -148,11 +144,16 @@ public class VirtualPond implements Runnable, GUICore {
 	
 	@Override
 	public void saveFileAs() {
-		int retCode = fileChooser.showSaveDialog(mainFrame);
+		JFileChooser fc = getFileChooser();
+		int retCode = fc.showSaveDialog(mainFrame);
 		if (retCode == JFileChooser.APPROVE_OPTION) {
-			addressBookFileNameFull = fileChooser.getSelectedFile().getAbsolutePath();
-			// TODO: check the result of the following
+			// TODO: check if the chosen file already exists: if so, confirm overwrite
+			File file = enforceOurFileExtension(fc.getSelectedFile());
+			addressBookName = file.getName();
+			addressBookFileName = file.getAbsolutePath();
 			commitAddressBookToFile();
+			isStale = false;
+			updateWindowTitle();
 		}
 	}
 	
@@ -167,7 +168,7 @@ public class VirtualPond implements Runnable, GUICore {
 	@Override
 	public void quit() {
 		// TODO: IF unsaved changes THEN ask user to save OR cancel OR discard changes.
-		if( !commitAddressBookToFileIfStale() ) {
+		if( !writeUnsavedChangesToFile() ) {
 			// TODO: we weren't able to commit the address book to a file, what do we do?
 			// for now, print an error and continue to exit
 			System.err.println("commitAddressBookToFile() failed!");
@@ -177,38 +178,28 @@ public class VirtualPond implements Runnable, GUICore {
 	
 	// LOCAL METHODS //
 
-	/**
-	 * Trueifies freshness and updates window title.
-	 */
 	private void makeFresh() {
-		if( isAddressBookFresh ) return;
-		isAddressBookFresh = true;
-		updateWindowTitle();
+		if( isStale ) {
+			isStale = false;
+			updateWindowTitle();
+		}
 	}
-	
-	/**
-	 * Falsifies freshness and updates window title.
-	 */
+
 	private void makeStale() {
-		if( !isAddressBookFresh ) return;
-		isAddressBookFresh = false;
+		if( isStale ) return;
+		isStale = true;
 		updateWindowTitle();
 	}
 
-	private boolean commitAddressBookToFileIfStale() {
-		if( isAddressBookFresh ) return true;
-		return commitAddressBookToFile();
+	private boolean writeUnsavedChangesToFile() {
+		if( isStale ) return commitAddressBookToFile();
+		return true;
 	}
 	
 	/**
 	 * Attempts to write out the current address book to a file.
-	 * If the address book is fresh, does nothing and returns true.
-	 * If the address book is stale and has a filename, writes
-	 * the address book and returns true.
-	 * If the address book is stale and does not have a filename,
-	 * prompts the user for a filename, and if the user provides one,
-	 * writes the address book and returns true.
-	 * Else returns false.
+	 * If addressBookFileName == null, prompts the user for a filename,
+	 * else uses the existing filename.
 	 * @return true on success, false otherwise
 	 */
 	private boolean commitAddressBookToFile() {
@@ -218,10 +209,8 @@ public class VirtualPond implements Runnable, GUICore {
 		File fileToSaveTo = null;
 		// WARNING: I changed this comparator and I don't know what effect it causes
 		// but it got the write working as opening a file means it has a name I guess.
-		if( addressBookFileNameFull == null ) {
-			// we don't have a name, so we need to ask the user for one
+		if( addressBookFileName == null ) {
 			JFileChooser fc = getFileChooser();
-
 			int retCode = fc.showSaveDialog(getMainWindow());
 			if (retCode == JFileChooser.APPROVE_OPTION) {
 				fileToSaveTo = fileChooser.getSelectedFile();
@@ -230,19 +219,29 @@ public class VirtualPond implements Runnable, GUICore {
 			}
 		} else {
 			// we have a name, so just save there
-			fileToSaveTo = new File(addressBookFileNameFull);
+			fileToSaveTo = new File(addressBookFileName);
 		}
 		VirtualBookWriter vbWriter = new VirtualBookWriter(addressBook, fileToSaveTo);
 		vbWriter.write();
 		// TODO: check if the write succeeded; for now assume it did
-		addressBookFileName = fileToSaveTo.getName();
-		addressBookFileNameFull = fileToSaveTo.getAbsolutePath();
+		addressBookName = fileToSaveTo.getName();
+		addressBookFileName = fileToSaveTo.getAbsolutePath();
 		makeFresh();
 		return true;
 	}
 	
+	private File enforceOurFileExtension(File file) {
+		String filename = file.getAbsolutePath();
+		// TODO: get these extensions elsewhere and check all of them
+		if( !filename.endsWith(".pond") && !filename.endsWith(".pond™") ) {
+			// TODO: get preferred extension and stick it on
+			file = new File(filename + ".pond");
+		}
+		return file;
+	}
+	
 	private void updateWindowTitle() {
-		mainFrame.setTitle(addressBookFileName + (isAddressBookFresh ? "" : "*") + " - " + TITLE);
+		mainFrame.setTitle(addressBookName + (isStale ? "*" : "") + " - " + TITLE);
 	}
 	
 	/**
@@ -267,7 +266,7 @@ public class VirtualPond implements Runnable, GUICore {
 		
 		mainFrame.setVisible(true);
 
-		openFile(null);
+		prepareEmptyBook();
 	}
 
 	/**

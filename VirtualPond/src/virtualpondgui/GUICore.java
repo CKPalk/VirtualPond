@@ -69,6 +69,12 @@ public interface GUICore {
 	void openFile(File file);
 	
 	/**
+	 * If there is a loaded address book then unloads it.
+	 * Creates a new VirtualAddressBook with default columns and no contacts.
+	 */
+	void prepareEmptyBook();
+	
+	/**
 	 * Attempts to save the current address book to the current file,
 	 * or prompts the user if there is no current filename.
 	 */

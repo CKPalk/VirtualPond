@@ -3,18 +3,18 @@ package addressbook;
 public class Field {
 
 	public Field(String data, boolean required) {
-		this.data = data;
+		this.name = data;
 		this.required = required;
 	}
 	
-	public String data;
+	public String name;
 	public InputValidationCode valCode;
 	private boolean required;
 	
 	
 	// --- Public Class Methods ---
 	@Override public String toString() {
-		return this.data;
+		return this.name;
 	}
 	
 	public String getValCode() {

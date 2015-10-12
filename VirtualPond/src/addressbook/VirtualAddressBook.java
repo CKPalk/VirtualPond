@@ -7,8 +7,10 @@ import java.util.Comparator;
 
 public class VirtualAddressBook {
 	// Final static members
+	// TODO: decide if having a character that is hard to type on Windows should be in our file extension.
+	// Atlee says, "probably not wise".
 	public static final String DEFAULT_DATA_FILENAME = "address_book_default_data"; // will be *.pondï¿½
-	public static final String FILE_EXTENSION = "pond™";
+	public static final String FILE_EXTENSION = "pondï¿½";
 	
 	// --- Constructor ---
 	public VirtualAddressBook() {
@@ -37,6 +39,23 @@ public class VirtualAddressBook {
 	
 	
 	// --- Public Class Methods ---
+	public static VirtualAddressBook createDefaultBook() {
+		ArrayList<Field> fields = new ArrayList<>();
+		fields.add(new Field("First Name", false));
+		fields.add(new Field("Last Name", false));
+		fields.add(new Field("Phone", false));
+		fields.add(new Field("Email", false));
+		fields.add(new Field("Address", false));
+		fields.add(new Field("City", false));
+		fields.add(new Field("State", false));
+		fields.add(new Field("Zip", false));
+		return new VirtualAddressBook(fields, new ArrayList<Contact>());	
+	}
+	
+	public static VirtualAddressBook createFromFile(File file) {
+		return (new VirtualBookReader(file)).read();
+	}
+	
 	public void switchFields(int index1, int index2) {
 		Collections.swap(fields, index1, index2);
 		for (Contact contact : contacts) {
@@ -68,7 +87,7 @@ public class VirtualAddressBook {
 		}
 	}
 	public void setFieldAtIndex(String newData, int index) {
-		fields.get(index).data = newData;
+		fields.get(index).name = newData;
 	}
 	public void newContact(Contact contact) {
 		contacts.add(contact);

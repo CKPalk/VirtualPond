@@ -43,6 +43,8 @@ public class ToolBarReactor implements ToolBar.Reactor {
 			if( n == 0 ) { // Yes
 				guiCore.deleteContactsByIndex(selected);
 			}
+		} else {
+			System.err.println("need at least one entry selected to delete");
 		}
 	}
 }
