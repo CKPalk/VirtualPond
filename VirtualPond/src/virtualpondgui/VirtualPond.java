@@ -467,6 +467,14 @@ public class VirtualPond implements Runnable, GUICore {
 		} else if( args.length == 0 ) { // else DO open previous book by default
 			
 			initialBookFileName = Preferences.userRoot().node(ourNodeName).get("previousBookFileName", null);
+			if( initialBookFileName != null ) {
+				File fileToOpen = new File( initialBookFileName );
+				if( !fileToOpen.exists() ) {
+					initialBookFileName = null;
+				} else {
+					initialBookFileName = fileToOpen.getAbsolutePath();
+				}
+			}
 		
 		}
 
