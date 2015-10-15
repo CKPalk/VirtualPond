@@ -10,15 +10,13 @@ import addressbook.Contact;
 import addressbook.VirtualAddressBook;
 
 public interface GUICore {
-	// TODO: expose public methods of GUICore
-	
 	/**
 	 * Does nothing if contact == null,
 	 * else adds this contact to the current address book.
 	 * @param contact an extant Contact or null.
 	 */
 	void addContact(Contact contact);
-	
+
 	/**
 	 * If there is an unmodified file open, then prompts to save.
 	 * Else just prepares default empty address book.
@@ -30,38 +28,45 @@ public interface GUICore {
 	 * @param indices an array of indices into the address book.
 	 */
 	void deleteContactsByIndex(int[] indices);
-	
+
 	/**
 	 * Pops up a modal Edit Contact dialog box.
 	 * @param contact the initial Contact to edit, which may be null.
 	 * @return the modified Contact, or null if the user cancelled.
 	 */
 	Contact editContactDialog(String title, Contact contact);
-	
+
 	/**
 	 * Returns an array of selected contact indices.
 	 * @return an array of indices, which may be empty.
 	 */
 	int[] getSelectedIndices();
-	
+
 	VirtualAddressBook getCurrentAddressBook();
-	
+
 	JFileChooser getFileChooser();
-	
+
 	Component getMainWindow();
-	
+
 	/**
 	 * Returns a reference to the indexed Contact.
 	 * @param index
 	 * @return the indexed Contact or null.
 	 */
 	Contact getContactByIndex(int index);
-	
+
 	/**
 	 * @return a URI to an HTML User Manual, or null.
 	 */
 	URI getUserManualURI();
-			
+
+	/**
+	 * IF an untitled, empty address book is loaded, do nothing.
+	 * IF a non-empty address book is loaded,
+	 *   THEN open a new instance of the program with an empty, untitled address book.  
+	 */
+	void onFileNew();
+
 	/**
 	 * Attempts to open a file and make it the current address book for the current window.
 	 * @param file an extant file to open
@@ -78,12 +83,17 @@ public interface GUICore {
 	 * Attempts to save the current address book to the current file,
 	 * or prompts the user if there is no current filename.
 	 */
-	void saveFile();
+	boolean saveFile();
 	
 	/**
 	 * Prompts the user for a new filename, and attempts to save there.
 	 */
 	void saveFileAs();
+	
+	/**
+	 * Shows the user manual.
+	 */
+	void showUserManual();
 	
 	/**
 	 * Overwrites a contact at an existing index with new values.

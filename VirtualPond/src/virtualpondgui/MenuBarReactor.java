@@ -21,8 +21,7 @@ public class MenuBarReactor implements MenuBar.Reactor {
 	}
 	
 	public void onFileNew() {
-		// TODO: we think that this should probably open a new window
-		System.out.println("File/New not implemented");
+		guiCore.onFileNew();
 	}
 	
 	public void onFileOpen() {
@@ -66,21 +65,7 @@ public class MenuBarReactor implements MenuBar.Reactor {
 	}
 	
 	public void onHelpUserManual() {
-		// thanks, http://stackoverflow.com/questions/5226212/how-to-open-the-default-webbrowser-using-java
-		// IF this is running on a desktop (which is probably is)
-		if(Desktop.isDesktopSupported()) {
-			// THEN try to open our user manual in a browser
-			try {
-				Desktop.getDesktop().browse(guiCore.getUserManualURI());
-			} catch (IOException e) {
-				// TODO: handle the case where the URI cannot be reached;
-				// for now, show text on the console
-				System.out.println("There was an I/O problem while attempting to open the User Manual. Good luck!");
-			}
-		} else {
-			// ELSE
-			// this case shouldn't happen since this is a desktop program, so let's pretend that it didn't happen.
-		}
+		guiCore.showUserManual();
 	}
 	
 	public void onHelpAbout() {

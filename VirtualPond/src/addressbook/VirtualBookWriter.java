@@ -24,7 +24,7 @@ public class VirtualBookWriter implements VirtualBookIO {
 	// --- Public Class Methods ---
 	
 	// FUNCTIONALITY:
-	public void write() {
+	public boolean write() {
 		
 		try {
 			
@@ -38,6 +38,7 @@ public class VirtualBookWriter implements VirtualBookIO {
 			   System.out.println("Assured file write permissions.");
 			}else {
 				System.err.println("Can't read or write to files.");
+				return false;
 			}
 			
 			FileWriter file_writer = new FileWriter(file.getAbsolutePath());
@@ -52,11 +53,10 @@ public class VirtualBookWriter implements VirtualBookIO {
 			System.out.println("PRINTING BOOK TO: " + file.getAbsolutePath());
 				
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			// File pointer broken.
-			e.printStackTrace();
+			return false;
 		}
 		
+		return true;
 	}
 	
 	public String getPrintFormattedFields() {

@@ -51,9 +51,13 @@ public class VirtualAddressBook {
 		fields.add(new Field("Zip", false));
 		return new VirtualAddressBook(fields, new ArrayList<Contact>());	
 	}
-	
+
+	// --- File I/O ---
 	public static VirtualAddressBook createFromFile(File file) {
 		return (new VirtualBookReader(file)).read();
+	}
+	public boolean writeToFile(File file) {
+		return (new VirtualBookWriter(this, file)).write();
 	}
 	
 	public void switchFields(int index1, int index2) {
@@ -113,7 +117,4 @@ public class VirtualAddressBook {
 	private static VirtualAddressBook getDefaultBook() {
 		return new VirtualBookReader(DEFAULT_DATA_FILENAME, true).read();
 	}
-	
-	
-	
 }
