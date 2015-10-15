@@ -43,12 +43,12 @@ public class VirtualAddressBook {
 		ArrayList<Field> fields = new ArrayList<>();
 		fields.add(new Field("First Name", false));
 		fields.add(new Field("Last Name", false));
-		fields.add(new Field("Phone", false));
-		fields.add(new Field("Email", false));
-		fields.add(new Field("Address", false));
+		fields.add(new Field("Address 1", false));
+		fields.add(new Field("Address 2", false));
 		fields.add(new Field("City", false));
 		fields.add(new Field("State", false));
 		fields.add(new Field("Zip", false));
+		fields.add(new Field("Phone", false));
 		return new VirtualAddressBook(fields, new ArrayList<Contact>());	
 	}
 

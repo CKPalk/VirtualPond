@@ -3,9 +3,11 @@ package virtualpondgui;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import javax.swing.*;
@@ -120,7 +122,36 @@ public class VirtualPond implements Runnable, GUICore {
 
 	@Override
 	public void onFileNew() {
-		// TODO: implement - see GUICore and our Use Case - New for details.
+		if( currentBookFileName == null && !isStale ) {
+			prepareEmptyBook(); // this won't do much, if anything
+		} else {
+			// start a new instance of the program with a new, empty address book
+			
+			// get full path of this class in the file system
+			ClassLoader loader = this.getClass().getClassLoader();
+			String className = "virtualpondgui/VirtualPond.class";
+			String execPath = loader.getResource(className).toString();
+			
+			// execute a new instance of this program with the -n parameter (see main())
+			if( execPath.startsWith("jar:") ) { // started from a .jar file
+				execPath = execPath.substring(execPath.indexOf("jar:file:") + "jar:file:".length(),
+						execPath.indexOf("!"));
+				try {
+					Runtime.getRuntime().exec("java -jar " + execPath + " -n");
+				} catch (IOException e) {
+					System.err.println("error creating a new instance of VirtualPond!");
+				}
+				System.out.println("started from a jar file:\n" + execPath);
+			} else { // started from a .class file
+				String dir = execPath.substring(execPath.indexOf("file:") + "file:".length(),
+						execPath.lastIndexOf(className));
+				try {
+					Runtime.getRuntime().exec("java " + "virtualpondgui.VirtualPond" + " -n", null, new File(dir));
+				} catch (IOException e) {
+					System.err.println("error creating a new instance of VirtualPond!");
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -143,6 +174,38 @@ public class VirtualPond implements Runnable, GUICore {
 		mainContentPanel.resetContactsTable(); // refresh the table
 		isStale = false;
 		updateWindowTitle();
+	}
+	
+	@Override
+	public void quit() {
+		if( isStale ) {
+			String[] options = {"Save Changes", "Discard Changes", "Don't Quit" };
+			int n = JOptionPane.showOptionDialog( mainFrame,
+					"There are unsaved changes in this address book!\nWhat do you want to do?",
+					"Unsaved Changes!",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE,
+					null,
+					options,
+					options[0] );
+			switch( n ) {
+			case 0: // Save Changes
+				if( saveFile() ) break; // try to save file
+				else return; // fail safely by NOT quitting
+			case 1: // Discard Changes
+				currentBookFileName = null;
+				break;
+			case 2: // Don't Quit
+				return;
+			default:
+			}
+		}
+
+		// remember the current address book by filename
+		if( currentBookFileName != null ) {
+			Preferences.userRoot().node(ourNodeName).put("previousBookFileName", currentBookFileName);
+		}
+		System.exit(0);
 	}
 	
 	@Override
@@ -183,39 +246,6 @@ public class VirtualPond implements Runnable, GUICore {
 		makeStale();
 	}
 	
-	@Override
-	public void quit() {
-		System.out.println("VirtualPond.quit()");
-		if( isStale ) {
-			String[] options = {"Save Changes", "Discard Changes", "Don't Quit" };
-			int n = JOptionPane.showOptionDialog( mainFrame,
-					"There are unsaved changes in this address book!\nWhat do you want to do?",
-					"Unsaved Changes!",
-					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.WARNING_MESSAGE,
-					null,
-					options,
-					options[0] );
-			switch( n ) {
-			case 0: // Save Changes
-				if( saveFile() ) break; // try to save file
-				else return; // fail safely by NOT quitting
-			case 1: // Discard Changes
-				currentBookFileName = null;
-				break;
-			case 2: // Don't Quit
-				return;
-			default:
-			}
-		}
-
-		// remember the current address book by filename
-		if( currentBookFileName != null ) {
-			Preferences.userRoot().node(ourNodeName).put("previousBookFileName", currentBookFileName);
-		}
-		System.exit(0);
-	}
-	
 	// LOCAL METHODS //
 	private void makeStale() {
 		if( isStale ) return;
@@ -241,6 +271,30 @@ public class VirtualPond implements Runnable, GUICore {
 			int retCode = getFileChooser().showSaveDialog(getMainWindow());
 			if (retCode == JFileChooser.APPROVE_OPTION) {
 				fileToSaveTo = enforceOurFileExtension(fileChooser.getSelectedFile());
+				if( fileToSaveTo.exists() ) {
+					String[] options = {"Overwrite", "Cancel"};
+					int n = JOptionPane.showOptionDialog( mainFrame,
+							"The selected file,\n"
+							+ fileToSaveTo.getAbsolutePath() + "\n"
+							+ "already exists!\n"
+							+ "Do you want to overwrite that file?\n"
+							+ "\n"
+							+ "!! WARNING: this will permanently erase that file's contents !!",
+							"File already exists!",
+							JOptionPane.YES_NO_OPTION,
+							JOptionPane.WARNING_MESSAGE,
+							null,
+							options,
+							options[1] );
+					switch( n ) {
+					case 0: // Overwrite
+						break;
+					case 1: // Cancel
+						return false;
+					default:
+					}
+					
+				}
 			} else {
 				return false;
 			}
