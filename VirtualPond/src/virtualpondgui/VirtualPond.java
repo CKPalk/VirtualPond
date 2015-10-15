@@ -125,32 +125,7 @@ public class VirtualPond implements Runnable, GUICore {
 		if( currentBookFileName == null && !isStale ) {
 			prepareEmptyBook(); // this won't do much, if anything
 		} else {
-			// start a new instance of the program with a new, empty address book
-			
-			// get full path of this class in the file system
-			ClassLoader loader = this.getClass().getClassLoader();
-			String className = "virtualpondgui/VirtualPond.class";
-			String execPath = loader.getResource(className).toString();
-			
-			// execute a new instance of this program with the -n parameter (see main())
-			if( execPath.startsWith("jar:") ) { // started from a .jar file
-				execPath = execPath.substring(execPath.indexOf("jar:file:") + "jar:file:".length(),
-						execPath.indexOf("!"));
-				try {
-					Runtime.getRuntime().exec("java -jar " + execPath + " -n");
-				} catch (IOException e) {
-					System.err.println("error creating a new instance of VirtualPond!");
-				}
-				System.out.println("started from a jar file:\n" + execPath);
-			} else { // started from a .class file
-				String dir = execPath.substring(execPath.indexOf("file:") + "file:".length(),
-						execPath.lastIndexOf(className));
-				try {
-					Runtime.getRuntime().exec("java " + "virtualpondgui.VirtualPond" + " -n", null, new File(dir));
-				} catch (IOException e) {
-					System.err.println("error creating a new instance of VirtualPond!");
-				}
-			}
+			startNewProcess("-n");
 		}
 	}
 	
@@ -251,6 +226,42 @@ public class VirtualPond implements Runnable, GUICore {
 		if( isStale ) return;
 		isStale = true;
 		updateWindowTitle();
+	}
+	
+	/**
+	 * Starts a separate instance of VirtualPond with the specified parameters.
+	 * @param parameters
+	 */
+	private void startNewProcess(String parameters) {
+		// get full path of this class in the file system
+		ClassLoader loader = this.getClass().getClassLoader();
+		String className = "virtualpondgui/VirtualPond.class";
+		String execPath = loader.getResource(className).toString();
+		
+		// format path for operating system
+		String OS = System.getProperty("os.name").toLowerCase();
+		int startTrim = execPath.indexOf("file:")
+				+ ( OS.contains("windows") ? "file:/".length() : "file:".length() );
+		
+		// are we in a jar?
+		// format path for jar/not jar
+		boolean inJar = execPath.startsWith("jar:");
+		int endTrim = inJar ? execPath.indexOf("!") : execPath.lastIndexOf(className);
+		
+		// trim path
+		execPath = execPath.substring(startTrim, endTrim);
+		
+		// create new instance of this program in a separate process
+		try {
+			if( inJar ) {
+				Runtime.getRuntime().exec("java -jar " + execPath + " " + parameters);
+			} else {
+				Runtime.getRuntime().exec("java virtualpondgui.VirtualPond" + " " + parameters,
+						null, new File(execPath));
+			}
+		} catch( IOException e ) {
+			System.err.println("Error creating a new instance of VirtualPond!");
+		}
 	}
 
 	private boolean writeUnsavedChangesToCurrentFile() {
