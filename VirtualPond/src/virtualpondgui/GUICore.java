@@ -68,6 +68,15 @@ public interface GUICore {
 	void onFileNew();
 
 	/**
+	 * Prompts user for file name FIRST,
+	 * THEN IF it seems to be valid:
+	 *   IF an untitled, empty address book is loaded, reuse this window,
+	 *   ELSE start a new instance of the program and load it there.
+	 * ALLOW the user to cancel.
+	 */
+	void onFileOpen();
+	
+	/**
 	 * Attempts to open a file and make it the current address book for the current window.
 	 * @param file an extant file to open
 	 */

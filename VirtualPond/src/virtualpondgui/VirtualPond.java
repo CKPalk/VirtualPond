@@ -51,6 +51,27 @@ public class VirtualPond implements Runnable, GUICore {
 	
 	@Override
 	public void closeFile() {
+		if( isStale ) {
+			String[] options = {"Save Changes", "Discard Changes", "Don't Close" };
+			int n = JOptionPane.showOptionDialog( mainFrame,
+					"There are unsaved changes in this address book!\nWhat do you want to do?",
+					"Unsaved Changes!",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.WARNING_MESSAGE,
+					null, options, options[0] );
+			switch( n ) {
+			case 0: // Save Changes
+				if( saveFile() ) break; // try to save file
+				else return; // fail safely by NOT quitting
+			case 1: // Discard Changes
+				currentBookFileName = null;
+				isStale = false;
+				break;
+			case 2: // Don't Close
+				return;
+			default:
+			}
+		}
 		prepareEmptyBook();
 	}
 	
@@ -130,6 +151,31 @@ public class VirtualPond implements Runnable, GUICore {
 	}
 	
 	@Override
+	public void onFileOpen() {
+		JFileChooser fileChooser = getFileChooser();
+		int choice = fileChooser.showOpenDialog(mainFrame);
+		if( choice == JFileChooser.APPROVE_OPTION ) {
+			
+			File fileToOpen = fileChooser.getSelectedFile();
+			if( fileToOpen.exists() ) {
+				if( currentBookFileName == null && !isStale ) {
+					// reuse this window
+					openFile( fileToOpen );
+				} else {
+					// start a new instance of VirtualPond, pass the filename as a parameter
+					startNewProcess(fileToOpen.getAbsolutePath());
+				}
+				
+			} else {
+				JOptionPane.showMessageDialog(mainFrame,
+						"The selected file doesn't exist!",
+						"Imaginary file!",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
+	@Override
 	public void openFile(File file) {
 		writeUnsavedChangesToCurrentFile();
 		currentBook = VirtualAddressBook.createFromFile(file);
@@ -159,16 +205,15 @@ public class VirtualPond implements Runnable, GUICore {
 					"There are unsaved changes in this address book!\nWhat do you want to do?",
 					"Unsaved Changes!",
 					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.QUESTION_MESSAGE,
-					null,
-					options,
-					options[0] );
+					JOptionPane.WARNING_MESSAGE,
+					null, options, options[0] );
 			switch( n ) {
 			case 0: // Save Changes
 				if( saveFile() ) break; // try to save file
 				else return; // fail safely by NOT quitting
 			case 1: // Discard Changes
 				currentBookFileName = null;
+				isStale = false;
 				break;
 			case 2: // Don't Quit
 				return;
@@ -193,11 +238,14 @@ public class VirtualPond implements Runnable, GUICore {
 		JFileChooser fc = getFileChooser();
 		int retCode = fc.showSaveDialog(mainFrame);
 		if (retCode == JFileChooser.APPROVE_OPTION) {
-			// TODO: check if the chosen file already exists: if so, confirm overwrite
+			
 			File file = enforceOurFileExtension(fc.getSelectedFile());
+			if( file.exists() && !promptOverwrite(file) ) return;
+			
 			currentBookName = file.getName();
 			currentBookFileName = file.getAbsolutePath();
 			commitAddressBookToFile();
+			
 			isStale = false;
 			updateWindowTitle();
 		}
@@ -282,30 +330,7 @@ public class VirtualPond implements Runnable, GUICore {
 			int retCode = getFileChooser().showSaveDialog(getMainWindow());
 			if (retCode == JFileChooser.APPROVE_OPTION) {
 				fileToSaveTo = enforceOurFileExtension(fileChooser.getSelectedFile());
-				if( fileToSaveTo.exists() ) {
-					String[] options = {"Overwrite", "Cancel"};
-					int n = JOptionPane.showOptionDialog( mainFrame,
-							"The selected file,\n"
-							+ fileToSaveTo.getAbsolutePath() + "\n"
-							+ "already exists!\n"
-							+ "Do you want to overwrite that file?\n"
-							+ "\n"
-							+ "!! WARNING: this will permanently erase that file's contents !!",
-							"File already exists!",
-							JOptionPane.YES_NO_OPTION,
-							JOptionPane.WARNING_MESSAGE,
-							null,
-							options,
-							options[1] );
-					switch( n ) {
-					case 0: // Overwrite
-						break;
-					case 1: // Cancel
-						return false;
-					default:
-					}
-					
-				}
+				if( fileToSaveTo.exists() && !promptOverwrite(fileToSaveTo) ) return false;
 			} else {
 				return false;
 			}
@@ -328,6 +353,26 @@ public class VirtualPond implements Runnable, GUICore {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Modal dialog that prompts the user to confirm overwriting the specified file.
+	 * @param fileToOverwrite the destination file - this method doesn't touch the actual file
+	 * @return true if user confirms, else false
+	 */
+	private boolean promptOverwrite(File fileToOverwrite) {
+		String[] options = {"Overwrite", "Cancel"};
+		int n = JOptionPane.showOptionDialog( mainFrame,
+				"The selected file,\n\n"
+				+ fileToOverwrite.getAbsolutePath() + "\n\n"
+				+ "already exists!\n"
+				+ "Do you want to overwrite that file?\n\n"
+				+ "!! WARNING: this will permanently erase that file's contents !!",
+				"File already exists!",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE,
+				null, options, options[1] );
+		return n == 0;
 	}
 	
 	private File enforceOurFileExtension(File file) {
@@ -404,11 +449,25 @@ public class VirtualPond implements Runnable, GUICore {
 	 *        -n  open an untitled, empty address book
 	 */
 	public static void main(String[] args) {
-		// check for -n parameter: "open an untitled, empty address book"
-		if( args.length > 0 && Arrays.asList(args).contains("-n") ) { // do NOT open previous book
-			initialBookFileName = null;
-		} else { // else DO open previous book, if possible
+
+		// crude command-line parsing
+		if( args.length > 0 ) {
+
+			// check for -n parameter: "open an untitled, empty address book"
+			if( Arrays.asList(args).contains("-n") ) { // do NOT open previous book
+				initialBookFileName = null;
+			} else {
+				// assume last argument is the name of the file to open
+				File fileToOpen = new File( args[args.length - 1] );
+				if( fileToOpen.exists() ) {
+					initialBookFileName = fileToOpen.getAbsolutePath();
+				}
+			}
+
+		} else if( args.length == 0 ) { // else DO open previous book by default
+			
 			initialBookFileName = Preferences.userRoot().node(ourNodeName).get("previousBookFileName", null);
+		
 		}
 
 		createAndShowGUI();
