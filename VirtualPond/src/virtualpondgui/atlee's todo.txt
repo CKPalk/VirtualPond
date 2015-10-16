@@ -19,3 +19,5 @@ Atlee's TODO:
 	> IF current address book has extra fields, CONFIRM with the user that those fields will be lost (yes/cancel)
 		> maybe merge this dialog with both of the above dialogs, as needed
 	> ASK user for filename
+	
+> TEST that both Cameron's and Assembla's gits are working
