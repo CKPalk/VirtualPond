@@ -1,0 +1,21 @@
+Atlee's TODO:
+
+> Cameron is finalizing the Contact INDEXES so that index 0 always corresponds to a specific field.
+
+> I need to redesign the Add/Edit dialog such that it doesn't look like crap.
+> It should look like the sketch I drew and e-mailed to everyone, EXCEPT WITHOUT the email field.
+> Widths and positions can be hardcoded - the dialog will not be resizable at this point.
+> Cameron's validation code will accept a FIELD INDEX and a VALUE, and return TRUE if it PASSES, else FALSE:
+	> any field index past 7 (hardcoded) will automatically PASS.
+
+> Add Import/Export to File menu.
+> Import:
+	> ASK user for filename
+	> ATTEMPT to VirtualAddressBookIO.import(...)
+	> 
+> Export:
+	> IF nothing selected, ASK if they want to export entire address book
+	> IF something selected, ASK if they want to export just those selected contacts
+	> IF current address book has extra fields, CONFIRM with the user that those fields will be lost (yes/cancel)
+		> maybe merge this dialog with both of the above dialogs, as needed
+	> ASK user for filename

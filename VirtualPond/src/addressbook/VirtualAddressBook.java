@@ -56,6 +56,9 @@ public class VirtualAddressBook {
 	public static VirtualAddressBook createFromFile(File file) {
 		return (new VirtualBookReader(file)).read();
 	}
+	public static VirtualAddressBook importFromFile(File file) {
+		return null;
+	}
 	public boolean writeToFile(File file) {
 		return (new VirtualBookWriter(this, file)).write();
 	}
