@@ -9,6 +9,12 @@ import javax.swing.JFileChooser;
 import addressbook.Contact;
 import addressbook.VirtualAddressBook;
 
+/**
+ * The interface through which GUI components can talk to the main program class.
+ * 
+ * @author atleebrink
+ *
+ */
 public interface GUICore {
 	/**
 	 * Does nothing if contact == null,

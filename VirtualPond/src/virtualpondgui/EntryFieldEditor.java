@@ -11,6 +11,12 @@ import javax.swing.JTextField;
 
 import addressbook.Field;
 
+/**
+ * A JLabel + JTextField pair used to display and edit a contact field.
+ * 
+ * @author atleebrink
+ *
+ */
 public class EntryFieldEditor extends JPanel {
 	private static final long serialVersionUID = 1L;
 

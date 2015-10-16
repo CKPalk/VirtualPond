@@ -6,6 +6,12 @@ import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+/**
+ * The JPanel that holds the tool bar and contacts table.
+ * 
+ * @author atleebrink
+ *
+ */
 public class MainContentPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 

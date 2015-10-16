@@ -4,6 +4,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+/**
+ * The JMenuBar that acts as the main menu for the program.
+ * 
+ * @author atleebrink
+ *
+ */
 public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
 

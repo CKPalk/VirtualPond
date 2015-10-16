@@ -6,6 +6,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
+/**
+ * The JScrollPane which contains a table for showing a list of contacts.
+ * 
+ * @author atleebrink
+ *
+ */
 public class ContactsTable extends JScrollPane {
 	private static final long serialVersionUID = 1L;
 

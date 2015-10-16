@@ -6,6 +6,12 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+/**
+ * The JPanel that makes up the tool bar.
+ * 
+ * @author atleebrink
+ *
+ */
 public class ToolBar extends JPanel {
 	private static final long serialVersionUID = 1L;
 

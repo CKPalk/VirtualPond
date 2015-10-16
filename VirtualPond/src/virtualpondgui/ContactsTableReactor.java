@@ -2,6 +2,12 @@ package virtualpondgui;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * Responds to contacts table events.
+ * 
+ * @author atleebrink
+ *
+ */
 public class ContactsTableReactor extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 

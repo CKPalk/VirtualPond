@@ -3,11 +3,9 @@ package virtualpondgui;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.prefs.Preferences;
 
 import javax.swing.*;
@@ -16,6 +14,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import addressbook.*;
 
+/**
+ * Contains main() method.
+ * Is the primary class of the program.
+ * 
+ * @author atleebrink
+ *
+ */
 public class VirtualPond implements Runnable, GUICore {
 	private final static String TITLE = "Virtual Pond";
 	private final static int WINDOW_WIDTH = 800;

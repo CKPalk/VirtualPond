@@ -3,9 +3,7 @@ package virtualpondgui;
 import javax.swing.JOptionPane;
 
 /**
- * Implements reactions to user inputs from the MenuBar.
- * Some actions are handled here, while others are
- * re-delegated from here to GUICore.
+ * Responds to menu bar selections.
  * 
  * @author atleebrink
  */

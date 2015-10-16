@@ -4,6 +4,12 @@ import javax.swing.JOptionPane;
 
 import addressbook.Contact;
 
+/**
+ * Responds to toolbar buttons.
+ * 
+ * @author atleebrink
+ *
+ */
 public class ToolBarReactor implements ToolBar.Reactor {
 	private GUICore guiCore;
 	

@@ -12,6 +12,12 @@ import addressbook.Contact;
 import addressbook.Field;
 import addressbook.VirtualAddressBook;
 
+/**
+ * The JDialog that allows a user to edit all the fields of a contact.
+ * 
+ * @author atleebrink
+ *
+ */
 public class EditContactDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 

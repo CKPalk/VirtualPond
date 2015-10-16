@@ -3,6 +3,12 @@ package virtualpondgui;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+/**
+ * Responds to main window events.
+ * 
+ * @author atleebrink
+ *
+ */
 public class MainWindowListener implements WindowListener {
 	private GUICore guiCore;
 	
