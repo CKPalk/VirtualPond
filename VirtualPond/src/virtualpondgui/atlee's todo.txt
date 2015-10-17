@@ -20,4 +20,11 @@ Atlee's TODO:
 		> maybe merge this dialog with both of the above dialogs, as needed
 	> ASK user for filename
 	
-> TEST that both Cameron's and Assembla's gits are working
+> Provide some easy way to deselect entries in the table WITHOUT having to hold down Command or Control.
+
+> Disable Edit / Delete buttons when nothing selected.
+	> This will mean having them disabled BY DEFAULT, and then enabling them when a selection is made,
+	> and disabling them when a selection is lost.
+	> EDIT should only work when ONE entry is selected.
+	> DELETE should work when ONE OR MORE entries are selected.
+

@@ -4,8 +4,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import javax.swing.*;
@@ -86,7 +86,7 @@ public class VirtualPond implements Runnable, GUICore {
 		// it is critical that contacts are removed from higher indices to lower,
 		// else the indices would become invalid after a removal.
 		Arrays.sort(indices);
-		ArrayList<Contact> contacts = currentBook.getContacts();
+		List<Contact> contacts = currentBook.getContacts();
 		for( int i = indices.length - 1; i >= 0; i-- ) contacts.remove(indices[i]);
 		mainContentPanel.deleteContacts(indices, true);
 		makeStale();

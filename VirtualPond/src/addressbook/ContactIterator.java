@@ -1,11 +1,11 @@
 package addressbook;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class ContactIterator implements Iterator<String> {
 
-	private ArrayList<String> contacts;
+	private List<String> contacts;
 	private int position;
 	
 	public ContactIterator(Contact contact) {

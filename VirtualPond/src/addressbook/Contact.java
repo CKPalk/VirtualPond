@@ -2,11 +2,19 @@ package addressbook;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class Contact implements Iterable<String> {
 
+	// this.valCode = validationCode;
+	// --- Private Data Members ---
+	private List<String> contactDataArray;
+
 	// --- Constructors ---
+	public Contact() {
+		contactDataArray = new ArrayList<>();
+	}
 	public Contact(int numFields) {
 		contactDataArray = new ArrayList<>();
 		for( int i = 0; i < numFields; i++ ) contactDataArray.add("");
@@ -14,9 +22,7 @@ public class Contact implements Iterable<String> {
 	public Contact(ArrayList<String> contactDataArray) {
 		this.contactDataArray = contactDataArray;
 	}
-	// this.valCode = validationCode;
-	// --- Private Data Members ---
-	private ArrayList<String> contactDataArray;
+	
 	
 	// --- Public Class Methods ---
 	
@@ -33,18 +39,15 @@ public class Contact implements Iterable<String> {
 	void editDataAtIndex(String newData, int index) {
 		contactDataArray.set(index, newData);
 	}
-	
-	
-	
-	
+
 	// SETTERS:
 	public void setContactDataArray(ArrayList<String> contactDataArray) {
 		this.contactDataArray = contactDataArray;
 	}
 	
 	// GETTERS:
-	public ArrayList<String> getContactDataArray() {
-		return this.contactDataArray;
+	public List<String> getContactDataArray() {
+		return contactDataArray;
 	}
 	public String getContactDataAt(int index) {
 		if( this != null && contactDataArray != null && index < contactDataArray.size() ) {
@@ -60,7 +63,7 @@ public class Contact implements Iterable<String> {
 	
 	
 	// ITERABLE
-	public ArrayList<String> getContacts() {
+	public List<String> getContacts() {
 		return contactDataArray;
 	}
 	

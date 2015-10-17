@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class VirtualAddressBook {
 	// Final static members
@@ -11,7 +12,12 @@ public class VirtualAddressBook {
 	// Atlee says, "probably not wise".
 	public static final String DEFAULT_DATA_FILENAME = "address_book_default_data"; // will be *.pond�
 	public static final String FILE_EXTENSION = "pond�";
-	
+
+	// --- Private Data Members ---
+	List<Field> fields;
+	List<Contact> contacts;
+	int indexToSortBy;
+
 	// --- Constructor ---
 	public VirtualAddressBook() {
 		this(getDefaultBook());
@@ -21,7 +27,7 @@ public class VirtualAddressBook {
 		this(new VirtualBookReader(addressBookFile).read());
 	}
 	
-	public VirtualAddressBook(ArrayList<Field> fields, ArrayList<Contact> contactsSet) {
+	public VirtualAddressBook(List<Field> fields, List<Contact> contactsSet) {
 		this.fields = fields;
 		this.contacts = contactsSet;
 		this.indexToSortBy = 0;
@@ -32,24 +38,11 @@ public class VirtualAddressBook {
 		this(vab.fields, vab.contacts);
 	}
 	
-	// --- Private Data Members ---
-	ArrayList<Field> fields;
-	ArrayList<Contact> contacts;
-	int indexToSortBy;
 	
 	
 	// --- Public Class Methods ---
 	public static VirtualAddressBook createDefaultBook() {
-		ArrayList<Field> fields = new ArrayList<>();
-		fields.add(new Field("First Name", false));
-		fields.add(new Field("Last Name", false));
-		fields.add(new Field("Address 1", false));
-		fields.add(new Field("Address 2", false));
-		fields.add(new Field("City", false));
-		fields.add(new Field("State", false));
-		fields.add(new Field("Zip", false));
-		fields.add(new Field("Phone", false));
-		return new VirtualAddressBook(fields, new ArrayList<Contact>());	
+		return new VirtualAddressBook( Field.createDefaultFieldList(), new ArrayList<Contact>());	
 	}
 
 	// --- File I/O ---
@@ -109,10 +102,10 @@ public class VirtualAddressBook {
 	public Field getFieldAtIndex(int index) {
 		return fields.get(index);
 	}
-	public ArrayList<Field> getFields() {
+	public List<Field> getFields() {
 		return fields;
 	}
-	public ArrayList<Contact> getContacts() {
+	public List<Contact> getContacts() {
 		return contacts;
 	}
 	

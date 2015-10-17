@@ -1,8 +1,9 @@
 package virtualpondgui;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -22,18 +23,18 @@ public class EntryFieldEditor extends JPanel {
 
 	private JTextField field;
 	
-	public EntryFieldEditor(String name, String initialContent, Field contactField) {
-		super(new FlowLayout(FlowLayout.CENTER));
-		add(new JLabel(name));
+	public EntryFieldEditor( String name, String initialContent, Field contactField, int prefWidth ) {
+		setLayout( new BoxLayout( this, BoxLayout.X_AXIS ) );
+
+		add( new JLabel(name) );
+		add( Box.createHorizontalStrut(5) );
 		field = new JTextField(initialContent);
-		Dimension d = field.getPreferredSize();
-		// TODO: change width to fit container;
-		// make sure the label is wide enough,
-		// then size the textfield to take up available space or something.
-		d.width = 100;
-		field.setPreferredSize(d);
-		field.setInputVerifier(new FieldVerifier(contactField));
+		field.setInputVerifier( new FieldVerifier(contactField) );
 		add(field);
+
+		Dimension dim = getPreferredSize();
+		dim.width = prefWidth;
+		setPreferredSize( dim );
 	}
 	
 	public String getFieldValue() {

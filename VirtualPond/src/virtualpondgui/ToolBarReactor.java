@@ -18,7 +18,7 @@ public class ToolBarReactor implements ToolBar.Reactor {
 	}
 	
 	public void onAdd() {
-		guiCore.addContact( guiCore.editContactDialog("Add New Contact", null) );
+		guiCore.addContact( guiCore.editContactDialog("Add New Contact", new Contact()) );
 	}
 	
 	public void onEdit() {
