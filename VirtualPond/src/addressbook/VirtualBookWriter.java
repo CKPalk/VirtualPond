@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 
-public class VirtualBookWriter implements VirtualBookIO {
+public class VirtualBookWriter {
 
 	public VirtualBookWriter(VirtualAddressBook addressBook, File file) {
 		this.addressBook = addressBook;
@@ -86,9 +86,6 @@ public class VirtualBookWriter implements VirtualBookIO {
 	// GETTERS:
 	public File getFile() {
 		return this.file;
-	}
-	public String getDividerRegex() {
-		return FILE_CHARACTER_DIVIDER_REGEX;
 	}
 	
 	
