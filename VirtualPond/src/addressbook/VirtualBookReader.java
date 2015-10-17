@@ -10,10 +10,10 @@ public class VirtualBookReader {
 
 	// --- Constructor ---
 	public VirtualBookReader(String file) {		
-		this.file = new File(processedFilename(file, false));
+		this.file = new File(processFilename(file, false));
 	}
 	public VirtualBookReader(String file, boolean hidden) {
-		this.file = new File(processedFilename(file, hidden));
+		this.file = new File(processFilename(file, hidden));
 	}
 	public VirtualBookReader(File file) {
 		this.file = file;
@@ -33,9 +33,7 @@ public class VirtualBookReader {
 		Scanner file_in;
 		try {
 			file_in = new Scanner(file);
-			
-			// File validation could be done now.
-			
+
 			// Read first two lines as field information
 			String[] field_data = file_in.nextLine().split(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX);
 			
@@ -67,13 +65,11 @@ public class VirtualBookReader {
 			e1.printStackTrace();
 		}
 		
-		
-		
 		return new VirtualAddressBook(fields, contacts);
 		
 	}
 	
-	private String processedFilename(String filename, boolean hidden) {
+	private static String processFilename(String filename, boolean hidden) {
 		// Removes any extensions on filename and appends .pond�
 		if (filename.contains(".")) {
 			filename = filename.split(".")[0] + "." + VirtualBookIO.VIRTUAL_ADDRESS_BOOK_EXTENSION;

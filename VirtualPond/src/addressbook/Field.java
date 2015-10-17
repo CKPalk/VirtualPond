@@ -55,7 +55,7 @@ public class Field {
 	}
 	
 	// utility
-	public static List<Field> createDefaultFieldList() {
+	public static ArrayList<Field> createDefaultFieldList() {
 		return new ArrayList<Field>(NUM_DEFAULT) {
 			private static final long serialVersionUID = 1L;
 		{
