@@ -157,18 +157,21 @@ public class EditContactDialog extends JDialog {
 	}
 	
 	public void onSave() {
+		// extract the Strings from the dialog's editable fields and place into a new Contact
 		ArrayList<String> fieldValues = new ArrayList<>();
-		for( int i = 0; i < editors.length; i++ ) {
-			fieldValues.add(editors[i].getFieldValue());
-		}
-
-		// TODO: ask the new Contact if it is valid:
-		//         IF NOT, ask the USER to confirm adding an incomplete contact
-		//           IF YES, save the contact
-		//           IF CANCEL, go back to editing
-		//         ELSE save the contact
+		for( int i = 0; i < editors.length; i++ ) fieldValues.add(editors[i].getFieldValue());
+		Contact potentialContact = new Contact(fieldValues);
 		
-		editedContact = new Contact(fieldValues);
+		// TODO: ask the new Contact if it is valid:
+		//         This will probably be something like potentialContact.isValid().
+		//         IF NOT, ask the USER to confirm adding an incomplete/nonstandard contact:
+		//           IF YES, save the contact to 'editedContact' and 'dispose()' to close this dialog
+		//           IF CANCEL, return from this method without doing anything (user can continue editing)
+		//         ELSE save the contact to 'editedContact' and 'dispose()' to close this dialog
+
+		// at this point we have decided to keep the edited contact,
+		// so we place it in 'editedContact' and 'dispose()' to close this dialog.
+		editedContact = potentialContact;
 		dispose();
 	}
 }
