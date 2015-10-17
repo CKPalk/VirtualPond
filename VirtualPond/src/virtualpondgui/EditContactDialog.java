@@ -25,7 +25,7 @@ public class EditContactDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 	private JButton buttonCancel, buttonSave;
-	
+
 	private VirtualAddressBook addressBook;
 	private Contact initialContact;
 	private Contact editedContact;
@@ -60,7 +60,7 @@ public class EditContactDialog extends JDialog {
 		rowFirstLast.add( Box.createHorizontalStrut( 20 ) );
 		rowFirstLast.add( registerEditor( Field.LASTNAME, (WIDTH - 20) / 2 ) );		
 		panel.add( rowFirstLast );
-		
+
 		// space
 		panel.add( Box.createVerticalStrut(5) );
 		
@@ -132,7 +132,6 @@ public class EditContactDialog extends JDialog {
 		//setPreferredSize(new Dimension(400, 400));
 		pack();
 		
-		
 		// since this dialog is modal, setVisible(true) blocks,
 		// and we will only get out of this dialog if the user
 		// presses one of the buttons or closes the dialog manually.
@@ -158,17 +157,21 @@ public class EditContactDialog extends JDialog {
 	}
 	
 	public void onSave() {
-		// TODO: extract edited values into a new Contact
-		// TODO: ask the new Contact if it is valid:
-		//         IF NOT, ask the USER to confirm adding an incomplete contact
-		//           IF YES, save the contact
-		//           IF CANCEL, go back to editing
-		//         ELSE save the contact
+		// extract the Strings from the dialog's editable fields and place into a new Contact
 		ArrayList<String> fieldValues = new ArrayList<>();
-		for( int i = 0; i < editors.length; i++ ) {
-			fieldValues.add(editors[i].getFieldValue());
-		}
-		editedContact = new Contact(fieldValues);
+		for( int i = 0; i < editors.length; i++ ) fieldValues.add(editors[i].getFieldValue());
+		Contact potentialContact = new Contact(fieldValues);
+		
+		// TODO: ask the new Contact if it is valid:
+		//         This will probably be something like potentialContact.isValid().
+		//         IF NOT, ask the USER to confirm adding an incomplete/nonstandard contact:
+		//           IF YES, save the contact to 'editedContact' and 'dispose()' to close this dialog
+		//           IF CANCEL, return from this method without doing anything (user can continue editing)
+		//         ELSE save the contact to 'editedContact' and 'dispose()' to close this dialog
+
+		// at this point we have decided to keep the edited contact,
+		// so we place it in 'editedContact' and 'dispose()' to close this dialog.
+		editedContact = potentialContact;
 		dispose();
 	}
 }
