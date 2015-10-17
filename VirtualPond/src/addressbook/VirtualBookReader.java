@@ -28,7 +28,7 @@ public class VirtualBookReader {
 	// --- Public Class Methods ---
 	
 	// FUNCTIONALITY:
-	public VirtualAddressBook read() {
+	VirtualAddressBook read() {
 		
 		Scanner file_in;
 		try {
@@ -68,6 +68,40 @@ public class VirtualBookReader {
 		return new VirtualAddressBook(fields, contacts);
 		
 	}
+	
+	
+	/*
+	 * This imports the file and should strip off any fields (as we should know their order already)
+	 * as well as any extra fields that their custom book might have
+	 */
+	VirtualAddressBook importBook() {
+
+		Scanner file_in;
+		try {
+			file_in = new Scanner(file);
+
+			// Read first two lines as field information
+			file_in.nextLine(); // This strips the fields for imports
+			
+			
+			// Initialize field and contact arrays
+			contacts = new ArrayList<Contact>();
+			
+			while (file_in.hasNextLine()) {
+				// Grabs first 8 elements and creates and adds a new contact
+				ArrayList<String> contact_data = new ArrayList<String>(Arrays.asList(file_in.nextLine().split(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX)).subList(0, 8));
+				Contact contact = new Contact(contact_data);
+				contacts.add(contact);
+			}
+			
+			file_in.close();
+			
+		} catch (IOException e1) { }
+		
+		return new VirtualAddressBook(VirtualBookIO.defaultFields, contacts);
+	}
+	
+	
 	
 	private static String processFilename(String filename, boolean hidden) {
 		// Removes any extensions on filename and appends .pond�
