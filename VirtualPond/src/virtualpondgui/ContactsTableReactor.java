@@ -47,7 +47,8 @@ public class ContactsTableReactor extends AbstractTableModel {
 	@Override
 	public String getColumnName(int columnIndex) {
 		int realColumn = columnMap.get( columnIndex );
-		return guiCore.getCurrentAddressBook().getFieldAtIndex(realColumn).toString();
+		return Field.friendlyNames.getOrDefault(realColumn, "");
+		//return guiCore.getCurrentAddressBook().getFieldAtIndex(realColumn).toString();
 	}
 
 	@Override

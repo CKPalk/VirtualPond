@@ -145,6 +145,18 @@ public class VirtualPond implements Runnable, GUICore {
 		}
 		return URI_USER_MANUAL;
 	}
+	
+	@Override
+	public void onExport() {
+		// TODO: inform user feature not implemented
+		JOptionPane.showMessageDialog(mainFrame, "Export not yet implemented.", "Export", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	@Override
+	public void onImport() {
+		// TODO: inform user feature not implemented
+		JOptionPane.showMessageDialog(mainFrame, "Import not yet implemented.", "Import", JOptionPane.INFORMATION_MESSAGE);
+	}
 
 	@Override
 	public void onFileNew() {

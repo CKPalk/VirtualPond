@@ -34,6 +34,14 @@ public class MenuBarReactor implements MenuBar.Reactor {
 		guiCore.saveFileAs();
 	}
 	
+	public void onFileImport() {
+		guiCore.onImport();
+	}
+	
+	public void onFileExport() {
+		guiCore.onExport();
+	}
+	
 	public void onFileQuit() {
 		guiCore.quit();
 	}

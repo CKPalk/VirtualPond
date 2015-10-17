@@ -83,6 +83,32 @@ public interface GUICore {
 	void onFileOpen();
 	
 	/**
+	 * IF nothing selected,
+	 *   THEN ask the user if they want to export the entire address book,
+	 *     IF yes, then prompt for a destination file
+	 *       IF that file exists, prompt for overwrite
+	 *       ELSE write STRIPPED version (no custom fields) of address book to that file
+	 * ELSE if one or more items are selected
+	 *   THEN ask the user if they want to export the selected contacts,
+	 *     IF yes, then prompt for a destination file
+	 *       IF that file exists, prompt for overwrite
+	 *       ELSE write STRIPPED version (no custom fields) of selected contacts to that file.
+	 */
+	void onExport();
+
+	/**
+	 * Prompts user for file name,
+	 * IF it seems to be valid:
+	 *   reads all contacts from that file,
+	 *   IF contacts contain custom fields,
+	 *     THEN tells the user that some information will be lost (specify which fields)
+	 *     AND asks the user for confirmation to proceed
+	 *       IF NO then cancels import
+	 *   FINALLY inserts all those contacts into the current address book.
+	 */
+	void onImport();
+	
+	/**
 	 * Attempts to open a file and make it the current address book for the current window.
 	 * @param file an extant file to open
 	 */

@@ -27,9 +27,9 @@ public class ToolBar extends JPanel {
 		super(new FlowLayout(FlowLayout.LEFT));
 
 		// buttons
-		buttonAdd = new JButton("Add");
-		buttonEdit = new JButton("Edit");
-		buttonDelete = new JButton("Delete");
+		buttonAdd = new JButton("Add Contact");
+		buttonEdit = new JButton("Edit Selected Contact");
+		buttonDelete = new JButton("Delete Selected Contact(s)");
 
 		// reactions
 		buttonAdd.addActionListener(event -> reactor.onAdd());

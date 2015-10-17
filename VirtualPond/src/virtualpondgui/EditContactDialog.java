@@ -132,14 +132,17 @@ public class EditContactDialog extends JDialog {
 		//setPreferredSize(new Dimension(400, 400));
 		pack();
 		
-		// center within parent
-		setLocationRelativeTo(null);
 		
 		// since this dialog is modal, setVisible(true) blocks,
 		// and we will only get out of this dialog if the user
 		// presses one of the buttons or closes the dialog manually.
 		// As such, we want the default result to be a null Contact.
 		this.editedContact = null;
+		// center within parent
+		setLocationRelativeTo(null);
+		// disable resizing
+		setResizable(false);
+		// show
 		setVisible(true);
 	}
 	

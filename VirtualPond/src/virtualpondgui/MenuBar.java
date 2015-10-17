@@ -19,6 +19,8 @@ public class MenuBar extends JMenuBar {
 		void onFileClose();
 		void onFileSave();
 		void onFileSaveAs();
+		void onFileImport();
+		void onFileExport();
 		void onFileQuit();
 		void onHelpUserManual();
 		void onHelpAbout();
@@ -36,6 +38,8 @@ public class MenuBar extends JMenuBar {
 		JMenuItem fileClose = new JMenuItem("Close");
 		JMenuItem fileSave = new JMenuItem("Save");
 		JMenuItem fileSaveAs = new JMenuItem("Save As...");
+		JMenuItem fileImport = new JMenuItem("Import...");
+		JMenuItem fileExport = new JMenuItem("Export...");
 		JMenuItem fileQuit = new JMenuItem("Quit");
 
 		// reactions to File menu items
@@ -44,6 +48,8 @@ public class MenuBar extends JMenuBar {
 		fileClose.addActionListener(event -> reactor.onFileClose());
 		fileSave.addActionListener(event -> reactor.onFileSave());
 		fileSaveAs.addActionListener(event -> reactor.onFileSaveAs());
+		fileImport.addActionListener(event -> reactor.onFileImport());
+		fileExport.addActionListener(event -> reactor.onFileExport());
 		fileQuit.addActionListener(event -> reactor.onFileQuit());
 
 		// add items to File menu
@@ -53,6 +59,9 @@ public class MenuBar extends JMenuBar {
 		file.addSeparator();
 		file.add(fileSave);
 		file.add(fileSaveAs);
+		file.addSeparator();
+		file.add(fileImport);
+		file.add(fileExport);
 		file.addSeparator();
 		file.add(fileQuit);
 
