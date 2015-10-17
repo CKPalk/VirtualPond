@@ -48,12 +48,10 @@ public class Field {
 	// this field's data
 	public String name;
 	public InputValidationCode valCode;
-	private boolean required;
 
 	// constructor
-	public Field(String data, boolean required) {
+	public Field(String data) {
 		this.name = data;
-		this.required = required;
 	}
 	
 	// utility
@@ -61,7 +59,7 @@ public class Field {
 		return new ArrayList<Field>(NUM_DEFAULT) {
 			private static final long serialVersionUID = 1L;
 		{
-			for( int i = 0; i < NUM_DEFAULT; i++ ) add( new Field( tsvNames.get(i), true ) );
+			for( int i = 0; i < NUM_DEFAULT; i++ ) add( new Field( tsvNames.get(i) ) );
 		}};
 	}
 	
