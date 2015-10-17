@@ -47,17 +47,12 @@ public class EditContactDialog extends JDialog {
 		
 		this.addressBook = addressBook;
 		this.initialContact = initialContact;
+		editors = new EntryFieldEditor[ Field.NUM_DEFAULT ];
 		
 		JPanel panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
 		panel.setBorder( BorderFactory.createEmptyBorder( 10, 15, 10, 15 ) );
 
-		// common to all fields
-		List<Field> fields = addressBook.getFields();
-		editors = new EntryFieldEditor[ Field.NUM_DEFAULT ];
-		EntryFieldEditor editor;
-		int i;
-				
 		// First Name ____________ Last Name _________________
 		JPanel rowFirstLast = new JPanel();
 		rowFirstLast.setLayout( new BoxLayout( rowFirstLast, BoxLayout.X_AXIS ) );
