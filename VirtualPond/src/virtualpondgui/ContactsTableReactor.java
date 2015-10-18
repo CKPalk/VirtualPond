@@ -1,9 +1,12 @@
 package virtualpondgui;
 
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 
 import addressbook.Field;
 
@@ -13,7 +16,7 @@ import addressbook.Field;
  * @author atleebrink
  *
  */
-public class ContactsTableReactor extends AbstractTableModel {
+public class ContactsTableReactor extends AbstractTableModel implements ContactsTable.Reactor {
 	private static final long serialVersionUID = 1L;
 	private static final Map<Integer, Integer> columnMap = new HashMap<Integer, Integer>(Field.NUM_DEFAULT) {
 		private static final long serialVersionUID = 1L;
@@ -29,11 +32,18 @@ public class ContactsTableReactor extends AbstractTableModel {
 	}};
 
 	private GUICore guiCore;
+	private JTable table;
 
 	public ContactsTableReactor(GUICore guiCore) {
 		this.guiCore = guiCore;
+		table = null;
 	}
 
+	@Override
+	public void setTable(JTable table) {
+		this.table = table;
+	}
+	
 	@Override
 	public int getRowCount() {
 		return guiCore.getCurrentAddressBook().getContacts().size();
@@ -70,5 +80,50 @@ public class ContactsTableReactor extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		// TODO do nothing, because we're not editable this way
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// thanks, http://stackoverflow.com/questions/4795586/how-can-i-check-which-jtable-cell-has-been-clicked-selected
+		int row = table.rowAtPoint(e.getPoint());
+		if( row < 0 ) {
+			// clicked on an empty row -> deselect everything
+			table.clearSelection();
+			// NOTE: on OSX Mavericks, there is still a faint blue box around the cell that was last clicked during selecting.
+			// I can't figure out how to make it go away.
+			// It doesn't affect functionality, it is just annoying.
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sortByColumn(int column) {
+		int realColumn = columnMap.get( column );
+		// TODO: may want to do sorting in another thread if slow
+		guiCore.getCurrentAddressBook().sortByFieldAtIndex( realColumn );
+		fireTableDataChanged();
 	}
 }

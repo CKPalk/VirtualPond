@@ -1,5 +1,8 @@
 package virtualpondgui;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Arrays;
 
 import javax.swing.JScrollPane;
@@ -15,8 +18,9 @@ import javax.swing.table.TableModel;
 public class ContactsTable extends JScrollPane {
 	private static final long serialVersionUID = 1L;
 
-	public interface Reactor extends TableModel {
-
+	public interface Reactor extends TableModel, MouseListener {
+		void setTable(JTable table);
+		void sortByColumn(int column);
 	}
 	
 	private GUICore guiCore;
@@ -51,6 +55,17 @@ public class ContactsTable extends JScrollPane {
 		if( table == null && guiCore.getCurrentAddressBook() != null ) {
 			tableModel = new ContactsTableReactor(guiCore);
 			table = new JTable(tableModel);
+			tableModel.setTable(table);
+			this.addMouseListener(tableModel);
+			table.getTableHeader().addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					int column = table.columnAtPoint(e.getPoint());
+					if( column >= 0 ) {
+						tableModel.sortByColumn(column);
+					}
+				}
+			});
 			setViewportView(table);
 		} else if( tableModel != null ) {
 			tableModel.fireTableStructureChanged();

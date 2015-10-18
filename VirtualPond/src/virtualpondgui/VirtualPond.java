@@ -186,8 +186,7 @@ public class VirtualPond implements Runnable, GUICore {
 				return;
 			}
 			
-			shouldExportAll = false;
-			
+			shouldExportAll = false;	
 		}
 
 		File fileToExportTo = null;

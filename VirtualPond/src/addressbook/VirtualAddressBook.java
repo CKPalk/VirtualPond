@@ -68,13 +68,35 @@ public class VirtualAddressBook {
 		}
 	}
 	public void sortByFieldAtIndex(int index) {
-		// Custom comparator to sort by specified index
+		// Custom comparators to sort by specified index
 		this.indexToSortBy = index;
-		Collections.sort(contacts, new Comparator<Contact>() {
-			public int compare(Contact contact1, Contact contact2) {
-				return contact1.getContactDataAt(index).compareToIgnoreCase(contact2.getContactDataAt(index));
-			}
-		});
+		Comparator<Contact> comparator = null;
+		switch( index ) {
+		case Field.LASTNAME:
+			final Comparator<Contact> lastNameComparator = new Comparator<Contact>() {
+				public int compare(Contact contact1, Contact contact2) {
+					String last1 = contact1.getContactDataAt(Field.LASTNAME);
+					String last2 = contact2.getContactDataAt(Field.LASTNAME);
+					int comp = last1.compareToIgnoreCase(last2);
+					if( comp == 0 ) { // break tie by comparing first names
+						String first1 = contact1.getContactDataAt(Field.FIRSTNAME);
+						String first2 = contact2.getContactDataAt(Field.FIRSTNAME);
+						comp = first1.compareToIgnoreCase(first2);
+					}
+					return comp;
+				}
+			};
+			comparator = lastNameComparator;
+			break;
+		default:
+			final Comparator<Contact> defaultComparator = new Comparator<Contact>() {
+				public int compare(Contact contact1, Contact contact2) {
+					return contact1.getContactDataAt(index).compareToIgnoreCase(contact2.getContactDataAt(index));
+				}
+			};
+			comparator = defaultComparator;
+		}
+		Collections.sort(contacts, comparator);
 	}
 	
 	
