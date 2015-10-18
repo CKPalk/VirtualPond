@@ -9,6 +9,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import addressbook.Contact;
@@ -156,11 +157,83 @@ public class EditContactDialog extends JDialog {
 		dispose();
 	}
 	
+	private boolean isFieldValid( int fieldIndex, String value ) {
+		switch( fieldIndex ) {
+		// TODO: add cases for each type, such as case Field.PHONE
+		default: // anything not specified above is automatically valid
+			return true;
+		}
+	}
+	
 	public void onSave() {
+		
 		// extract the Strings from the dialog's editable fields and place into a new Contact
 		ArrayList<String> fieldValues = new ArrayList<>();
-		for( int i = 0; i < editors.length; i++ ) fieldValues.add(editors[i].getFieldValue());
+		ArrayList<Integer> invalidFields = new ArrayList<>();
+		for( int i = 0; i < editors.length; i++ ) {
+			String fieldValue = editors[i].getFieldValue();
+			
+			// check if this particular field is valid or not
+			if( !isFieldValid( i, fieldValue ) ) {
+				invalidFields.add(i);
+			}
+			
+			// add value to list of values
+			fieldValues.add(editors[i].getFieldValue());
+		}
+
+		// if there were any invalid fields, ask the user about all of them at once
+		int numInvalid = invalidFields.size();
+		if( numInvalid > 0 ) {
+			StringBuilder badList = new StringBuilder();
+			for( int i = 0; i < numInvalid; i++ ) {
+				badList.append( "    " + Field.friendlyNames.get(i) + ": " + fieldValues.get(i) + "\n" );
+			}
+			String[] options = {"Use Anyway", "Cancel"};
+			int n = JOptionPane.showOptionDialog( this,
+					"Nonstandard field value" + (numInvalid > 1 ? "s" : "") +  " detected:\n\n"
+					+ badList.toString()
+					+ "\n"
+					+ "Do you want to use these values anyway?",
+					"Nonstandard field values!",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE,
+					null, options, options[0] );
+			if( n != 0 ) { // Cancel
+				return;
+			}
+		}
+		
+		// check that the contact has at least one non-empty name (first or last),
+		// and at least one other nonempty field
+		boolean hasFirst = !fieldValues.get( Field.FIRSTNAME ).isEmpty();
+		boolean hasLast = !fieldValues.get( Field.LASTNAME ).isEmpty();
+		boolean hasOther = false;
+		for( int i = 0; i < fieldValues.size(); i++ ) {
+			if( i != Field.FIRSTNAME && i != Field.LASTNAME
+					&& !fieldValues.get( i ).isEmpty() ) {
+				hasOther = true;
+			}
+		}
+		if( !( ( hasFirst || hasLast ) && hasOther ) ) {
+			String[] options = {"Use Anyway", "Cancel"};
+			int n = JOptionPane.showOptionDialog( this,
+					"A contact ought to have a name (first or last),\n"
+					+ "and at least one other piece of information.\n\n"
+					+ "Do you want to use what you've entered, anyway?",
+					"Low information contact!",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE,
+					null, options, options[0] );
+			if( n != 0 ) { // Cancel
+				return;
+			}			
+		}
+
 		Contact potentialContact = new Contact(fieldValues);
+
+		// check that each field is valid:
+		
 		
 		// TODO: ask the new Contact if it is valid:
 		//         This will probably be something like potentialContact.isValid().
