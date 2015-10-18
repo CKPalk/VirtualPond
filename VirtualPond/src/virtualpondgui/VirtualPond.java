@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -22,6 +23,7 @@ import addressbook.*;
  *
  */
 public class VirtualPond implements Runnable, GUICore {
+	
 	private final static String TITLE = "Virtual Pond";
 	private final static int WINDOW_WIDTH = 800;
 	private final static int WINDOW_HEIGHT = 600;
@@ -33,6 +35,7 @@ public class VirtualPond implements Runnable, GUICore {
 	private JFrame mainFrame = null;
 	private MainContentPanel mainContentPanel = null;
 	private JFileChooser fileChooser = null;
+	private JFileChooser fileChooserAnyFile = null;
 
 	// current address book information
 	private String currentBookName = null; // this is for display purposes only, and should not be used for file interactions
@@ -148,14 +151,115 @@ public class VirtualPond implements Runnable, GUICore {
 	
 	@Override
 	public void onExport() {
-		// TODO: inform user feature not implemented
-		JOptionPane.showMessageDialog(mainFrame, "Export not yet implemented.", "Export", JOptionPane.INFORMATION_MESSAGE);
+
+		// get array (which may be empty) of selected entries
+		int[] indices = getSelectedIndices();
+		
+		// decide what to do based on whether something is selected or not
+		boolean shouldExportAll;
+		if( indices.length < 1 ) { // if no selection, then ask user if they want to export entire file
+	
+			String[] options = {"Export Entire Address Book", "Cancel"};
+			int n = JOptionPane.showOptionDialog( mainFrame,
+					"Nothing is selected.\nDo you want to export the entire address book?",
+					"Export all contacts?",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE,
+					null, options, options[0] );
+			if( n != 0 ) { // Cancel
+				return;
+			}
+			
+			shouldExportAll = true;
+	
+		} else { // at least one entry is selected, so ask user if they want to proceed with exporting just the selected entries
+
+			String[] options = {"Export " + indices.length + " Selected Contact" + (indices.length > 1 ? "s" : ""), "Cancel"};
+			int n = JOptionPane.showOptionDialog( mainFrame,
+					"There " + (indices.length > 1 ? "are" : "is") + " " + indices.length + " contact" + (indices.length > 1 ? "s" : "") + " selected.\n"
+					+ "Do you want to export just " + (indices.length > 1 ? "these" : "this") + " selected contact" + (indices.length > 1 ? "s?" : "?"),
+					"Export selected contacts?",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE,
+					null, options, options[0] );
+			if( n != 0 ) { // Cancel
+				return;
+			}
+			
+			shouldExportAll = false;
+			
+		}
+
+		File fileToExportTo = null;
+
+		// NOTE: do NOT enforce our file extension on this file!
+		JFileChooser fc = getFileChooser();
+		int retCode = fc.showSaveDialog(mainFrame);
+		if (retCode == JFileChooser.APPROVE_OPTION) {
+			fileToExportTo = fc.getSelectedFile();
+			if( fileToExportTo.exists() && !promptOverwrite(fileToExportTo) ) return;			
+		}
+
+		List<Contact> contactsToExport = null;
+		if( shouldExportAll ) { // add entire address book to export list
+			contactsToExport = currentBook.getContacts();
+		} else { // add selected contacts to export list
+			contactsToExport = new ArrayList<Contact>();
+			for( int i = 0; i < indices.length; i++ ) {
+				contactsToExport.add( currentBook.getContacts().get( indices[i] ) ); 
+			}
+		}
+
+		if( !VirtualBookIO.exportBook( new VirtualAddressBook( currentBook.getFields(), contactsToExport ), fileToExportTo ) ) {
+		
+			// there was some problem exporting the contacts! tell the user!
+			JOptionPane.showMessageDialog(mainFrame,
+					"There was a problem exporting to the file:\n" + fileToExportTo.getAbsolutePath(),
+					"Export error!",
+					JOptionPane.ERROR_MESSAGE);
+		}		
 	}
 	
 	@Override
 	public void onImport() {
-		// TODO: inform user feature not implemented
-		JOptionPane.showMessageDialog(mainFrame, "Import not yet implemented.", "Import", JOptionPane.INFORMATION_MESSAGE);
+		JFileChooser fileChooser = getFileChooserAnyFile();
+		int choice = fileChooser.showOpenDialog(mainFrame);
+		if( choice == JFileChooser.APPROVE_OPTION ) {
+			
+			File fileToImport = fileChooser.getSelectedFile();
+			if( fileToImport.exists() ) {
+
+				// if we already have an address book file open, make sure we aren't importing the same one!
+				if( currentBookFileName != null && currentBookFileName.equalsIgnoreCase( fileToImport.getAbsolutePath() ) ) {
+					JOptionPane.showMessageDialog(mainFrame,
+							"You have selected the currently opened address book for import!\nI can't do that, sorry.",
+							"I can't let you do that, Dave.",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				// TODO: check if imported file will have some information stripped (I don't know what importFromFile does).
+				// TODO: IF so, ask the user if we should proceed.
+				VirtualAddressBook importedBook = VirtualAddressBook.importFromFile(fileToImport);
+				if( importedBook == null ) {
+					JOptionPane.showMessageDialog(mainFrame,
+							"There was a problem importing the selected file!",
+							"Import problem!",
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					// TODO: we need a special "VirtualAddressBook.merge(VirtualAddressBook bookToMerge)" that checks for duplicates!
+					currentBook.getContacts().addAll(importedBook.getContacts());
+					mainContentPanel.resetContactsTable();
+					isStale = true;
+					updateWindowTitle();
+				}
+			} else {
+				JOptionPane.showMessageDialog(mainFrame,
+						"The selected file doesn't exist!",
+						"Imaginary file!",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 
 	@Override
@@ -286,7 +390,14 @@ public class VirtualPond implements Runnable, GUICore {
 		makeStale();
 	}
 	
-	// LOCAL METHODS //
+	// LOCAL METHODS //	
+	private JFileChooser getFileChooserAnyFile() {
+		if( fileChooserAnyFile == null ) {
+			fileChooserAnyFile = new JFileChooser();
+		}
+		return fileChooserAnyFile;
+	}
+
 	private void makeStale() {
 		if( isStale ) return;
 		isStale = true;

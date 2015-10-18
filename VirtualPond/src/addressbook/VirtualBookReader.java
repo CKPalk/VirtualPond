@@ -89,7 +89,8 @@ public class VirtualBookReader {
 			
 			while (file_in.hasNextLine()) {
 				// Grabs first 8 elements and creates and adds a new contact
-				ArrayList<String> contact_data = new ArrayList<String>(Arrays.asList(file_in.nextLine().split(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX)).subList(0, 8));
+				// Atlee says: "changed .subList(0, 8) to .subList(0, 7) to fix crash".
+				ArrayList<String> contact_data = new ArrayList<String>(Arrays.asList(file_in.nextLine().split(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX)).subList(0, 7));
 				Contact contact = new Contact(contact_data);
 				contacts.add(contact);
 			}

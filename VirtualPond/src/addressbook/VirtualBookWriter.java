@@ -112,11 +112,12 @@ public class VirtualBookWriter {
 	/*
 	 * This is used by export to trim any extra contact data off the array before writing to file
 	 * Sublist the contact data from indexes 0 to 8, removing custom fields
+	 * Atlee says: "subList(0, 8) -> subList(0, 7): bugfix"
 	 */
 	private ArrayList<String> getPrintFormattedTrimmedContactsArray() {
 		ArrayList<String> formattedContacts = new ArrayList<String>(addressBook.contacts.size());
 		for (int contact_index = 0; contact_index < addressBook.contacts.size(); contact_index++) {
-			formattedContacts.add(addressBook.contacts.get(contact_index).getContactDataArray().subList(0, 8).stream().map(Object::toString).collect(Collectors.joining(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX)));
+			formattedContacts.add(addressBook.contacts.get(contact_index).getContactDataArray().subList(0, 7).stream().map(Object::toString).collect(Collectors.joining(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX)));
 		}
 		return formattedContacts;
 	}
