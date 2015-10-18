@@ -47,13 +47,18 @@ public class VirtualAddressBook {
 
 	// --- File I/O ---
 	public static VirtualAddressBook createFromFile(File file) {
-		return (new VirtualBookReader(file)).read();
+		return VirtualBookIO.openBook(file);
 	}
 	public static VirtualAddressBook importFromFile(File file) {
-		return null;
+		return VirtualBookIO.importBook(file);
 	}
+	
+	public boolean exportToFile(File file) {
+		return VirtualBookIO.exportBook(this, file);
+	}
+	
 	public boolean writeToFile(File file) {
-		return (new VirtualBookWriter(this, file)).write();
+		return VirtualBookIO.saveBook(this, file);
 	}
 	
 	public void switchFields(int index1, int index2) {

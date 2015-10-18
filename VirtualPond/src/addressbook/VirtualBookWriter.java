@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class VirtualBookWriter {
 
-	public VirtualBookWriter(VirtualAddressBook addressBook, File file) {
+	VirtualBookWriter(VirtualAddressBook addressBook, File file) {
 		this.addressBook = addressBook;
 		this.file = file;
 	}
@@ -24,7 +24,7 @@ public class VirtualBookWriter {
 	// --- Public Class Methods ---
 	
 	// FUNCTIONALITY:
-	public boolean write() {
+	boolean write() {
 		
 		try {
 			
