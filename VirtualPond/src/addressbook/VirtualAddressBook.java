@@ -88,6 +88,22 @@ public class VirtualAddressBook {
 			};
 			comparator = lastNameComparator;
 			break;
+		case Field.ZIP:
+			final Comparator<Contact> zipComparator = new Comparator<Contact>() {
+				public int compare(Contact contact1, Contact contact2) {
+					String zip1 = contact1.getContactDataAt(Field.ZIP);
+					String zip2 = contact2.getContactDataAt(Field.ZIP);
+					int comp = zip1.compareToIgnoreCase(zip2);
+					if( comp == 0 ) { // break tie by comparing last names
+						String last1 = contact1.getContactDataAt(Field.LASTNAME);
+						String last2 = contact2.getContactDataAt(Field.LASTNAME);
+						comp = last1.compareToIgnoreCase(last2);
+					}
+					return comp;
+				}
+			};
+			comparator = zipComparator;
+			break;
 		default:
 			final Comparator<Contact> defaultComparator = new Comparator<Contact>() {
 				public int compare(Contact contact1, Contact contact2) {

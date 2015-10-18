@@ -12,7 +12,6 @@ Atlee's TODO:
 > Import:
 	> ASK user for filename
 	> ATTEMPT to VirtualAddressBookIO.import(...)
-	> 
 > Export:
 	> IF nothing selected, ASK if they want to export entire address book
 	> IF something selected, ASK if they want to export just those selected contacts

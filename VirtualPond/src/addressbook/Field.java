@@ -102,8 +102,6 @@ public class Field {
 		// TODO: Complete data validation when we come up with a system
 		return true;
 		
-		
-		
 		/* ReGeX validators
 		
 		switch(this.valCode) {
