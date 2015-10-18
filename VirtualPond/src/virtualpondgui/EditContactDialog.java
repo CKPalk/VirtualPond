@@ -157,6 +157,9 @@ public class EditContactDialog extends JDialog {
 		dispose();
 	}
 	
+	// TODO: hopefully we can put this functionality elsewhere.
+	// Atlee says: "I hear that Cameron has a validator mostly working, but I don't think he's uploaded it yet."
+	// Atlee says: "I wrote this stub so that I can write the rest of the onSave() method."
 	private boolean isFieldValid( int fieldIndex, String value ) {
 		switch( fieldIndex ) {
 		// TODO: add cases for each type, such as case Field.PHONE
@@ -187,7 +190,9 @@ public class EditContactDialog extends JDialog {
 		if( numInvalid > 0 ) {
 			StringBuilder badList = new StringBuilder();
 			for( int i = 0; i < numInvalid; i++ ) {
-				badList.append( "    " + Field.friendlyNames.get(i) + ": " + fieldValues.get(i) + "\n" );
+				int badIndex = invalidFields.get(i);
+				badList.append( "    " + Field.friendlyNames.get(badIndex) + ": "
+				+ fieldValues.get(badIndex) + "\n" );
 			}
 			String[] options = {"Use Anyway", "Cancel"};
 			int n = JOptionPane.showOptionDialog( this,
@@ -231,16 +236,6 @@ public class EditContactDialog extends JDialog {
 		}
 
 		Contact potentialContact = new Contact(fieldValues);
-
-		// check that each field is valid:
-		
-		
-		// TODO: ask the new Contact if it is valid:
-		//         This will probably be something like potentialContact.isValid().
-		//         IF NOT, ask the USER to confirm adding an incomplete/nonstandard contact:
-		//           IF YES, save the contact to 'editedContact' and 'dispose()' to close this dialog
-		//           IF CANCEL, return from this method without doing anything (user can continue editing)
-		//         ELSE save the contact to 'editedContact' and 'dispose()' to close this dialog
 
 		// at this point we have decided to keep the edited contact,
 		// so we place it in 'editedContact' and 'dispose()' to close this dialog.
