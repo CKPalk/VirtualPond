@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cp VirtualPond.jar "a name with spaces"/
+cd "a name with spaces"/
+java -jar VirtualPond.jar

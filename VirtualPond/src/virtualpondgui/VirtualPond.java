@@ -429,16 +429,14 @@ public class VirtualPond implements Runnable, GUICore {
 		// create new instance of this program in a separate process
 		try {
 			if( inJar ) {
-				String cmdString = "java -jar \"" + execPath + "\" " + parameters;
-				cmdString.replaceAll("%20", " "); // TODO: make this work
-				System.out.println("running: (?)\n" + cmdString);
+				String cmdString[] = {"java", "-jar", execPath.replaceAll("%20", " "), parameters};
 				Runtime.getRuntime().exec(cmdString);
 			} else {
 				Runtime.getRuntime().exec("java virtualpondgui.VirtualPond" + " " + parameters,
 						null, new File(execPath));
 			}
 		} catch( IOException e ) {
-			System.err.println("Error creating a new instance of VirtualPond!");
+			System.err.println("Error creating a new instance of VirtualPond:\n" + e.getMessage());
 		}
 	}
 
