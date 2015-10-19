@@ -67,6 +67,26 @@ public class VirtualAddressBook {
 			Collections.swap(contact.getContactDataArray(), index1, index2);
 		}
 	}
+	/**
+	 * Compares ONLY the selected field, without trying to break ties.
+	 * Empty fields are put LAST.
+	 * TODO: decide if we WANT empty fields to be LAST.
+	 * @param contact1
+	 * @param contact2
+	 * @param fieldIndex such as Field.FIRSTNAME
+	 */
+	private int compareSimple(Contact contact1, Contact contact2, int fieldIndex) {
+		String value1 = contact1.getContactDataAt(fieldIndex);
+		String value2 = contact2.getContactDataAt(fieldIndex);
+		boolean v1empty = value1 == null || value1.isEmpty();
+		boolean v2empty = value2 == null || value2.isEmpty();
+		if( v1empty ) {
+			if( v2empty ) return 0;
+			return 1;
+		}
+		if( v2empty ) return -1;
+		return value1.compareToIgnoreCase(value2);
+	}
 	public void sortByFieldAtIndex(int index) {
 		// Custom comparators to sort by specified index
 		this.indexToSortBy = index;
@@ -75,15 +95,18 @@ public class VirtualAddressBook {
 		case Field.LASTNAME:
 			final Comparator<Contact> lastNameComparator = new Comparator<Contact>() {
 				public int compare(Contact contact1, Contact contact2) {
-					String last1 = contact1.getContactDataAt(Field.LASTNAME);
-					String last2 = contact2.getContactDataAt(Field.LASTNAME);
-					int comp = last1.compareToIgnoreCase(last2);
-					if( comp == 0 ) { // break tie by comparing first names
-						String first1 = contact1.getContactDataAt(Field.FIRSTNAME);
-						String first2 = contact2.getContactDataAt(Field.FIRSTNAME);
-						comp = first1.compareToIgnoreCase(first2);
-					}
+					int comp = compareSimple(contact1, contact2, Field.LASTNAME);
+					if( comp == 0 ) comp = compareSimple(contact1, contact2, Field.FIRSTNAME);
 					return comp;
+//					String last1 = contact1.getContactDataAt(Field.LASTNAME);
+//					String last2 = contact2.getContactDataAt(Field.LASTNAME);
+//					int comp = last1.compareToIgnoreCase(last2);
+//					if( comp == 0 ) { // break tie by comparing first names
+//						String first1 = contact1.getContactDataAt(Field.FIRSTNAME);
+//						String first2 = contact2.getContactDataAt(Field.FIRSTNAME);
+//						comp = first1.compareToIgnoreCase(first2);
+//					}
+//					return comp;
 				}
 			};
 			comparator = lastNameComparator;
@@ -91,15 +114,23 @@ public class VirtualAddressBook {
 		case Field.ZIP:
 			final Comparator<Contact> zipComparator = new Comparator<Contact>() {
 				public int compare(Contact contact1, Contact contact2) {
-					String zip1 = contact1.getContactDataAt(Field.ZIP);
-					String zip2 = contact2.getContactDataAt(Field.ZIP);
-					int comp = zip1.compareToIgnoreCase(zip2);
-					if( comp == 0 ) { // break tie by comparing last names
-						String last1 = contact1.getContactDataAt(Field.LASTNAME);
-						String last2 = contact2.getContactDataAt(Field.LASTNAME);
-						comp = last1.compareToIgnoreCase(last2);
+					int comp = compareSimple(contact1, contact2, Field.ZIP);
+					if( comp == 0 ) { // break ties by last name
+						comp = compareSimple(contact1, contact2, Field.LASTNAME);
+						if( comp == 0 ) { // break ties by first name
+							comp = compareSimple(contact1,contact2, Field.FIRSTNAME);
+						}
 					}
 					return comp;
+//					String zip1 = contact1.getContactDataAt(Field.ZIP);
+//					String zip2 = contact2.getContactDataAt(Field.ZIP);
+//					int comp = zip1.compareToIgnoreCase(zip2);
+//					if( comp == 0 ) { // break tie by comparing last names
+//						String last1 = contact1.getContactDataAt(Field.LASTNAME);
+//						String last2 = contact2.getContactDataAt(Field.LASTNAME);
+//						comp = last1.compareToIgnoreCase(last2);
+//					}
+//					return comp;
 				}
 			};
 			comparator = zipComparator;
@@ -107,7 +138,8 @@ public class VirtualAddressBook {
 		default:
 			final Comparator<Contact> defaultComparator = new Comparator<Contact>() {
 				public int compare(Contact contact1, Contact contact2) {
-					return contact1.getContactDataAt(index).compareToIgnoreCase(contact2.getContactDataAt(index));
+					return compareSimple(contact1, contact2, index);
+					//return contact1.getContactDataAt(index).compareToIgnoreCase(contact2.getContactDataAt(index));
 				}
 			};
 			comparator = defaultComparator;
