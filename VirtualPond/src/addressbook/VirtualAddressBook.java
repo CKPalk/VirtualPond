@@ -98,15 +98,6 @@ public class VirtualAddressBook {
 					int comp = compareSimple(contact1, contact2, Field.LASTNAME);
 					if( comp == 0 ) comp = compareSimple(contact1, contact2, Field.FIRSTNAME);
 					return comp;
-//					String last1 = contact1.getContactDataAt(Field.LASTNAME);
-//					String last2 = contact2.getContactDataAt(Field.LASTNAME);
-//					int comp = last1.compareToIgnoreCase(last2);
-//					if( comp == 0 ) { // break tie by comparing first names
-//						String first1 = contact1.getContactDataAt(Field.FIRSTNAME);
-//						String first2 = contact2.getContactDataAt(Field.FIRSTNAME);
-//						comp = first1.compareToIgnoreCase(first2);
-//					}
-//					return comp;
 				}
 			};
 			comparator = lastNameComparator;
@@ -122,15 +113,6 @@ public class VirtualAddressBook {
 						}
 					}
 					return comp;
-//					String zip1 = contact1.getContactDataAt(Field.ZIP);
-//					String zip2 = contact2.getContactDataAt(Field.ZIP);
-//					int comp = zip1.compareToIgnoreCase(zip2);
-//					if( comp == 0 ) { // break tie by comparing last names
-//						String last1 = contact1.getContactDataAt(Field.LASTNAME);
-//						String last2 = contact2.getContactDataAt(Field.LASTNAME);
-//						comp = last1.compareToIgnoreCase(last2);
-//					}
-//					return comp;
 				}
 			};
 			comparator = zipComparator;
@@ -139,7 +121,6 @@ public class VirtualAddressBook {
 			final Comparator<Contact> defaultComparator = new Comparator<Contact>() {
 				public int compare(Contact contact1, Contact contact2) {
 					return compareSimple(contact1, contact2, index);
-					//return contact1.getContactDataAt(index).compareToIgnoreCase(contact2.getContactDataAt(index));
 				}
 			};
 			comparator = defaultComparator;
