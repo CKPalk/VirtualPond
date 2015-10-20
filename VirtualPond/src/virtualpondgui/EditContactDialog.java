@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import addressbook.Contact;
 import addressbook.Field;
+import addressbook.InputValidation;
 import addressbook.VirtualAddressBook;
 
 /**
@@ -158,14 +159,9 @@ public class EditContactDialog extends JDialog {
 	}
 	
 	// TODO: hopefully we can put this functionality elsewhere.
-	// Atlee says: "I hear that Cameron has a validator mostly working, but I don't think he's uploaded it yet."
 	// Atlee says: "I wrote this stub so that I can write the rest of the onSave() method."
 	private boolean isFieldValid( int fieldIndex, String value ) {
-		switch( fieldIndex ) {
-		// TODO: add cases for each type, such as case Field.PHONE
-		default: // anything not specified above is automatically valid
-			return true;
-		}
+		return InputValidation.isValidStringForFieldIndex(value, fieldIndex);
 	}
 	
 	public void onSave() {
