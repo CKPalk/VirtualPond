@@ -161,7 +161,14 @@ public class EditContactDialog extends JDialog {
 	// TODO: hopefully we can put this functionality elsewhere.
 	// Atlee says: "I wrote this stub so that I can write the rest of the onSave() method."
 	private boolean isFieldValid( int fieldIndex, String value ) {
-		return InputValidation.isValidStringForFieldIndex(value, fieldIndex);
+		// Validates the String value at fieldIndex
+		// TODO: Check if value is there and whether validation should run.
+		if ( value != null ) {
+			return InputValidation.isValidStringForFieldIndex(value, fieldIndex);
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public void onSave() {
