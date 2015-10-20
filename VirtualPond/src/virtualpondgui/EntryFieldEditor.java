@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import addressbook.Field;
+import addressbook.InputValidation;
 
 /**
  * A JLabel + JTextField pair used to display and edit a contact field.
@@ -51,7 +52,12 @@ public class EntryFieldEditor extends JPanel {
 		@Override
 		public boolean verify(JComponent input) {
 			JTextField textField = (JTextField)input;
-			return contactField.validate(textField.getText());
+			
+			// TODO: This needs to take in the index to the text field that
+			// it is trying to validate so it knows which expression to use.
+			// Currently set to hit switch default and return true, effectively
+			// not usuing validation as of now.
+			return InputValidation.isValidStringForFieldIndex(textField.getText(), 999);
 		}
 	}
 }
