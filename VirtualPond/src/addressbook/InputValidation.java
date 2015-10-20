@@ -1,46 +1,53 @@
 package addressbook;
 
 public class InputValidation {
-	public static boolean validateStringForIndex(String input, int index) {
+	
+	/* Validation for user inputs 
+	 * The static field indexes can be found in Field.java 
+	 */
+	public static boolean isValidStringForFieldIndex(String input, int index) {
 		switch(index) {
-		case 0: // City
-		case 5: // Last name
-		case 6: // First name
-			return input.matches("^[a-zA-Z]+$");
-		case 1: // State
-			return input.matches("^[a-zA-Z]{2}$");
-		case 2: // Zipcode
-			return input.matches("^[0-9]+$");
-		case 3: // First Address
-		case 4: // Second Address
-			return input.matches("\\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}\\b");
-		case 7: // Phone number
-			return input.matches("[1-9]\\d{2}-[1-9]\\d{2}-\\d{4}");
-		default: // No validation for indexes above our default 8
+		case Field.CITY: // City
+		case Field.LASTNAME: // Last name
+		case Field.FIRSTNAME: // First name
+			return input.matches( "^[a-zA-Z-]+$" );
+		case Field.STATE: // State
+			return input.matches( "^[a-zA-Z]{2}$" );
+		case Field.ZIP: // Zipcode
+			return input.matches( "^[0-9]+$" );
+		case Field.DELIVERY: // First Address
+		case Field.SECOND: // Second Address
+			return input.matches( "\\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}\\b" );
+		case Field.PHONE: // Phone number
+			return input.matches( "[1-9]\\d{2}-[1-9]\\d{2}-\\d{4}" );
+		default: 
+			// No validation for indexes above our default 8
+			// Always returns true
 			return true;
 		}
 	}
 	
 	public static String getValidationWarningForIndex(int index) {
 		switch (index) {
-		case 0: // City
-		return "";
-		case 1: // State
-		return "";
-		case 2: // Zipcode
-		return "";
-		case 3: // First Address
-		return "";
-		case 4: // Second Address
-		return "";
-		case 5: // Last name
-		return "";
-		case 6: // First name
-		return "";
-		case 7: // Phone number
-		return "";
+		case Field.CITY: // City
+			return "The city usually are composed of letters only.";
+		case Field.STATE: // State
+			return "The state usually are composed of letters only.";
+		case Field.ZIP: // Zipcode
+			return "Zipcodes usually match a pattern such as ###### or ######-####.";
+		case Field.DELIVERY: // First Address
+			return "Your address has characters that are not usually in an address.";
+		case Field.SECOND: // Second Address
+			return "Your second address has characters that are not usually in an address.";
+		case Field.LASTNAME: // Last name
+			return "Last names are usually composed of letters and/or hyphens.";
+		case Field.FIRSTNAME: // First name
+			return "First names are usually composed of letters and/or hyphens.";
+		case Field.PHONE: // Phone number
+			return "Phone numbers usually match a pattern such as ###-###-####";
 		default:
-		return "";
+			System.err.println("Default hit in switch statement while getting validation warning.");
+			return "Have a wonderful day!";
 		}
 	}
 }
