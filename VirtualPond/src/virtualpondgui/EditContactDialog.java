@@ -232,7 +232,7 @@ public class EditContactDialog extends JDialog {
 				return;
 			}			
 		}
-
+		
 		Contact potentialContact = new Contact(fieldValues);
 
 		// at this point we have decided to keep the edited contact,

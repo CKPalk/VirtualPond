@@ -96,15 +96,23 @@ public class VirtualBookWriter {
 	
 	
 	public String getPrintFormattedFields() {
-		return addressBook.fields.stream().map(Object::toString).collect(Collectors.joining(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX));
+		return addressBook.fields.stream().map(Object::toString).collect(
+				Collectors.joining( VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX )
+				);
 	}
 	
 	
 	// TODO: figure out why this crashes with an ArrayList index out of bounds exception: Index 0, Size 0
 	public ArrayList<String> getPrintFormattedContactsArray() {
 		ArrayList<String> formattedContacts = new ArrayList<String>(addressBook.contacts.size());
-		for (int contact_index = 0; contact_index < addressBook.contacts.size(); contact_index++) {
-			formattedContacts.add(addressBook.contacts.get(contact_index).getContactDataArray().stream().map(Object::toString).collect(Collectors.joining(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX)));
+		for( Contact contact : addressBook.contacts ) {
+			String formattedContact = contact.getContactDataArray()
+					.stream()
+						.map( Object::toString )
+							.collect(
+									Collectors.joining( VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX )
+									);
+			formattedContacts.add( formattedContact );
 		}
 		return formattedContacts;
 	}
@@ -112,12 +120,18 @@ public class VirtualBookWriter {
 	/*
 	 * This is used by export to trim any extra contact data off the array before writing to file
 	 * Sublist the contact data from indexes 0 to 8, removing custom fields
-	 * Atlee says: "subList(0, 8) -> subList(0, 7): bugfix"
 	 */
 	private ArrayList<String> getPrintFormattedTrimmedContactsArray() {
 		ArrayList<String> formattedContacts = new ArrayList<String>(addressBook.contacts.size());
-		for (int contact_index = 0; contact_index < addressBook.contacts.size(); contact_index++) {
-			formattedContacts.add(addressBook.contacts.get(contact_index).getContactDataArray().subList(0, 7).stream().map(Object::toString).collect(Collectors.joining(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX)));
+		for( Contact contact : addressBook.contacts ) {
+			String formattedContact = contact.getContactDataArray()
+					.subList( 0, Field.NUM_DEFAULT )
+						.stream()
+							.map( Object::toString )
+								.collect(
+										Collectors.joining( VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX )
+										);
+			formattedContacts.add( formattedContact );
 		}
 		return formattedContacts;
 	}
