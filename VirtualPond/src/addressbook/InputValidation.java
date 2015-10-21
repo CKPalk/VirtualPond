@@ -8,7 +8,8 @@ public class InputValidation {
 	public static boolean isValidStringForFieldIndex(String input, int index) {
 		
 		// Checks for empty inputs and of course those are valid.
-		if (input.trim().equals("")) return true;
+		// Removed .trim() on input so any input with trailing spaces is probably going to return false
+		if (input.equals("")) return true;
 		
 		switch(index) {
 		case Field.CITY: // City
