@@ -6,6 +6,10 @@ public class InputValidation {
 	 * The static field indexes can be found in Field.java 
 	 */
 	public static boolean isValidStringForFieldIndex(String input, int index) {
+		
+		// Checks for empty inputs and of course those are valid.
+		if (input.trim().equals("")) return true;
+		
 		switch(index) {
 		case Field.CITY: // City
 		case Field.LASTNAME: // Last name
