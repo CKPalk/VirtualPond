@@ -35,7 +35,8 @@ public class VirtualBookReader {
 			file_in = new Scanner(file);
 
 			// Read first line as field information
-			String[] field_data = file_in.nextLine().split(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX);
+			// Atlee says: ".split( regex ) -> .split( regex, -1 ): captures empty fields, as desired"
+			String[] field_data = file_in.nextLine().split( VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX, -1 );
 			
 			int cell_count = field_data.length;
 			
@@ -97,13 +98,11 @@ public class VirtualBookReader {
 			
 			while (file_in.hasNextLine()) {
 				// Grabs first 8 elements and creates and adds a new contact
-				// Atlee says: "changed .sublist(0, Field.NUM_DEFAULT) to .subList(0, Field.NUM_DEFAULT - 1) to fix crash"
 				ArrayList<String> contact_data = new ArrayList<String>(
 						Arrays.asList(
-								file_in.nextLine().split( 
-										VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX
-										)
-								).subList( 0, Field.NUM_DEFAULT - 1 )
+								file_in.nextLine().split( VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX, -1 )
+								)
+									.subList( 0, Field.NUM_DEFAULT )
 						);
 				Contact contact = new Contact(contact_data);
 				contacts.add(contact);
