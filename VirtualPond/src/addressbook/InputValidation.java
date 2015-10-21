@@ -21,9 +21,11 @@ public class InputValidation {
 			return input.matches( "^[0-9]+$" );
 		case Field.DELIVERY: // First Address
 		case Field.SECOND: // Second Address
-			return input.matches( "\\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}\\b" );
+			return input.matches("^[a-zA-Z0-9. \\/-]+$");
+			// This is for email validation, but we aren't using that
+			// return input.matches( "\\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}\\b" );
 		case Field.PHONE: // Phone number
-			return input.matches( "[1-9]\\d{2}-[1-9]\\d{2}-\\d{4}" );
+			return input.matches( "^[1-9]\\d{2}-[1-9]\\d{2}-\\d{4}$" );
 		default: 
 			// No validation for indexes above our default 8
 			// Always returns true
