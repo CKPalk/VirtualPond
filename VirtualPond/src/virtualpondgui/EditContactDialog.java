@@ -190,7 +190,8 @@ public class EditContactDialog extends JDialog {
 			for( int i = 0; i < numInvalid; i++ ) {
 				int badIndex = invalidFields.get(i);
 				badList.append( "    " + Field.friendlyNames.get(badIndex) + ": "
-				+ fieldValues.get(badIndex) + "\n" );
+				+ fieldValues.get(badIndex) + "\n"
+				+ "        (" + InputValidation.getValidationWarningForIndex(badIndex) + ")\n");
 			}
 			String[] options = {"Use Anyway", "Cancel"};
 			int n = JOptionPane.showOptionDialog( this,
