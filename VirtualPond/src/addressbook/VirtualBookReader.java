@@ -34,7 +34,7 @@ public class VirtualBookReader {
 		try {
 			file_in = new Scanner(file);
 
-			// Read first two lines as field information
+			// Read first line as field information
 			String[] field_data = file_in.nextLine().split(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX);
 			
 			int cell_count = field_data.length;
@@ -53,7 +53,15 @@ public class VirtualBookReader {
 			}
 			
 			while (file_in.hasNextLine()) {
-				ArrayList<String> contact_data = new ArrayList<String>(Arrays.asList(file_in.nextLine().split(VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX)));
+				ArrayList<String> contact_data = new ArrayList<String>(
+						Arrays.asList(
+								file_in.nextLine()
+									// Atlee says: "fixed bug with empty fields not being read"
+									// Atlee says: "split( regex ) -> split( regex, -1 ): now reads empty fields"
+									.split( VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX, -1 )
+									)
+						);
+				System.out.println("read line:\n" + contact_data );
 				Contact contact = new Contact(contact_data);
 				contacts.add(contact);
 			}
