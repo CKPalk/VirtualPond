@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class VirtualBookReader {
@@ -90,7 +91,18 @@ public class VirtualBookReader {
 			file_in = new Scanner(file);
 
 			// Read first two lines as field information
-			file_in.nextLine(); // This strips the fields for imports
+			String[] header = file_in.nextLine().split( VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX, -1 ); // This strips the fields for imports
+			if( header == null || header.length < Field.NUM_DEFAULT ) {
+				file_in.close();
+				return null;
+			}
+			for( int i = 0; i < Field.NUM_DEFAULT; i++ ) {
+				if( header[i] == null || !header[i].equals( Field.tsvNames.get( i ) ) ) {
+					System.out.println("expected: " + Field.tsvNames.get( i ) + ", got: " + header[i] ); 
+					file_in.close();
+					return null;
+				}
+			}
 			
 			
 			// Initialize field and contact arrays
@@ -110,7 +122,9 @@ public class VirtualBookReader {
 			
 			file_in.close();
 			
-		} catch (IOException e1) { }
+		} catch (IOException e1) {
+			return null;
+		}
 		
 		return new VirtualAddressBook(VirtualBookIO.defaultFields, contacts);
 	}
