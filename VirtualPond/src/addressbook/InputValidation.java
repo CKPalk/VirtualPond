@@ -22,7 +22,7 @@ public class InputValidation {
 			return input.matches( "^[0-9]{5}(-[0-9]{4})?$" );
 		case Field.DELIVERY: // First Address
 		case Field.SECOND: // Second Address
-			return input.matches("^[a-zA-Z0-9. \\/-#]+$");
+			return input.matches("^[a-zA-Z0-9. \\/#-]+$");
 			// This is for email validation, but we aren't using that
 			// return input.matches( "\\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}\\b" );
 		case Field.PHONE: // Phone number
