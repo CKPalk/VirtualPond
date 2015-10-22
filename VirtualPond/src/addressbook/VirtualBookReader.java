@@ -63,7 +63,6 @@ public class VirtualBookReader {
 									.split( VirtualBookIO.FILE_CHARACTER_DIVIDER_REGEX, -1 )
 									)
 						);
-				System.out.println("read line:\n" + contact_data );
 				Contact contact = new Contact(contact_data);
 				contacts.add(contact);
 			}
