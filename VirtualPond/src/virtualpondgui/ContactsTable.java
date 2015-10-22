@@ -1,5 +1,7 @@
 package virtualpondgui;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -7,6 +9,7 @@ import java.util.Arrays;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 /**
@@ -55,6 +58,21 @@ public class ContactsTable extends JScrollPane {
 		if( table == null && guiCore.getCurrentAddressBook() != null ) {
 			tableModel = new ContactsTableReactor(guiCore);
 			table = new JTable(tableModel);
+			table.setShowGrid(false);
+			
+			// thanks, http://stackoverflow.com/questions/25679653/unable-to-set-custom-background-color-in-jtable
+			final Color alternateColor = new Color(243, 246, 250);
+			table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+				private static final long serialVersionUID = 1L;
+				public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+					Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+					if (!isSelected) {
+						c.setBackground(row % 2 == 0 ? Color.white : alternateColor);
+					}
+					return c;
+				}
+			});
+			
 			tableModel.setTable(table);
 			this.addMouseListener(tableModel);
 			table.getTableHeader().addMouseListener(new MouseAdapter() {
